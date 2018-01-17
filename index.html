@@ -123,14 +123,24 @@
 <li><a href="https://nodejs.org/en/" target="_blank" rel="noopener">Node.js</a>  </li>
 <li><a href="https://git-scm.com/" target="_blank" rel="noopener">Git</a>  </li>
 </ul>
-<p>如果您的电脑中已经安装上述必备程序，那么恭喜您！接下来只需要使用 npm 即可完成 Hexo 的安装。  </p>
-<figure class="highlight plain"><figcaption><span>install -g hexo-cli```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> </span><br><span class="line"></span><br><span class="line">## 建站</span><br><span class="line">安装 Hexo 完成后，请执行下列命令，Hexo 将会在指定文件夹中新建所需要的文件。</span><br></pre></td></tr></table></figure>
-<p>hexo init myBlog</p>
-<p>cd myBlog</p>
-<p>npm i<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">新建完成后，指定文件夹的目录如下：</span><br></pre></td></tr></table></figure></p>
-<p>.<br>├── _config.yml<br>├── package.json<br>├── scaffolds<br>├── source<br>|   ├── _drafts<br>|   └── _posts<br>└── themes<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">## 配置网站信息</span><br><span class="line">1. 打开 _config.yml  </span><br><span class="line"></span><br><span class="line">2. 把第 6 行的 title 改成你想要的名字</span><br><span class="line"></span><br><span class="line">3. 把第 9 行的 author 改成你的名字</span><br><span class="line"></span><br><span class="line">4. 把最后一行的 type 改成 type: git（git前面有一个空格）</span><br><span class="line"></span><br><span class="line">5. 在最后一行后面新增一行，左边与 type 平齐，加上一行 repo: 仓库地址 </span><br><span class="line"></span><br><span class="line">## 安装 git 部署插件</span><br></pre></td></tr></table></figure></p>
-<p>npm install hexo-deployer-git –save<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">执行</span><br></pre></td></tr></table></figure></p>
-<p>hexo deploy<br>```</p>
+<p>如果您的电脑中已经安装上述必备程序，接下来只需要使用 npm 即可完成 Hexo 的安装。  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
+<h2 id="建站"><a href="#建站" class="headerlink" title="建站"></a>建站</h2><p>安装 Hexo 完成后，请执行下列命令，Hexo 将会在指定文件夹中新建所需要的文件。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hexo init myBlog</span><br><span class="line"></span><br><span class="line">cd myBlog</span><br><span class="line"></span><br><span class="line">npm i</span><br></pre></td></tr></table></figure></p>
+<p>新建完成后，指定文件夹的目录如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">.  </span><br><span class="line">├── _config.yml  </span><br><span class="line">├── package.json  </span><br><span class="line">├── scaffolds  </span><br><span class="line">├── source   </span><br><span class="line">|   ├── _drafts  </span><br><span class="line">|   └── _posts  </span><br><span class="line">└── themes</span><br></pre></td></tr></table></figure></p>
+<h2 id="配置网站信息"><a href="#配置网站信息" class="headerlink" title="配置网站信息"></a>配置网站信息</h2><ol>
+<li><p>打开 _config.yml  </p>
+</li>
+<li><p>把第 6 行的 title 改成你想要的名字</p>
+</li>
+<li><p>把第 9 行的 author 改成你的名字</p>
+</li>
+<li><p>把最后一行的 type 改成 type: git（git前面有一个空格）</p>
+</li>
+<li><p>在最后一行后面新增一行，左边与 type 平齐，加上一行 repo: 仓库地址 </p>
+</li>
+</ol>
+<h2 id="安装-git-部署插件"><a href="#安装-git-部署插件" class="headerlink" title="安装 git 部署插件"></a>安装 git 部署插件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+<p>执行<code>hexo deploy</code></p>
 <p>进入「你的用户名.github.io」对应的仓库，打开 GitHub Pages 功能，如果已经打开了，就直接点击预览链接</p>
 <p>你现在应该看到了你的博客！</p>
 <h2 id="写博客"><a href="#写博客" class="headerlink" title="写博客"></a>写博客</h2><ol>

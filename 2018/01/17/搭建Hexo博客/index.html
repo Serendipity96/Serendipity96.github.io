@@ -1,132 +1,92 @@
 <!DOCTYPE html>
-<html lang="zh-Hant-TW">
+<html>
 <head>
+  <meta charset="utf-8">
+  
 
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-	<title> 使用 Hexo + GitHub 轻松做出一个好看的博客 | Frontend_Depon </title>
-	<meta property="og:title" content=" 使用 Hexo + GitHub 轻松做出一个好看的博客 | Frontend_Depon " />
-	<meta name="twitter:title" content=" 使用 Hexo + GitHub 轻松做出一个好看的博客 | Frontend_Depon ">
-
-	<meta property="og:type" content="article">
-	<meta name="twitter:card" content="summary">
-
-	<meta name="description" content=" 使用 Hexo + GitHub 轻松做出一个好看的博客 | Frontend_Depon ">
-	<meta property="og:description" content=" 使用 Hexo + GitHub 轻松做出一个好看的博客 | Frontend_Depon " />
-	<meta name="twitter:description" content=" 使用 Hexo + GitHub 轻松做出一个好看的博客 | Frontend_Depon " />
-
-	<link rel="icon" type="image/x-icon" href="http://yoursite.com/asset/img/favicon.png">
-
-	<link rel="image_src" href="http://yoursite.com/asset/img/logo.png" >
-	<meta property="og:image" content="http://yoursite.com/asset/img/logo.png" />
-
-	<link href="http://yoursite.com/atom.xml" title="Frontend_Depon" type="application/atom+xml" rel="alternative">
-
-	<link rel="canonical" href="/2018/01/17/搭建Hexo博客/index.html">
-
-	<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.19.3/css/semantic.min.css">
-	<link rel="stylesheet" href="/asset/css/style.css">
-
-	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.19.3/javascript/semantic.min.js"></script>
-
+  
+  <title>使用 Hexo + GitHub 轻松做出一个好看的博客 | Frontend_Depon</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="什么是 Hexo？Hexo 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。 GitHub上的操作在 GitHub 上新建一个空仓库，仓库的名称是「用户名.github.io」 安装前提安装 Hexo 相当简单。然而在安装前，必须检查电脑中是否已安装下列应用程序：  Node.js   Git    如果您的电">
+<meta name="keywords" content="Hexo  博客">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用 Hexo + GitHub 轻松做出一个好看的博客">
+<meta property="og:url" content="http://yoursite.com/2018/01/17/搭建Hexo博客/index.html">
+<meta property="og:site_name" content="Frontend_Depon">
+<meta property="og:description" content="什么是 Hexo？Hexo 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。 GitHub上的操作在 GitHub 上新建一个空仓库，仓库的名称是「用户名.github.io」 安装前提安装 Hexo 相当简单。然而在安装前，必须检查电脑中是否已安装下列应用程序：  Node.js   Git    如果您的电">
+<meta property="og:updated_time" content="2018-01-17T04:44:22.262Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用 Hexo + GitHub 轻松做出一个好看的博客">
+<meta name="twitter:description" content="什么是 Hexo？Hexo 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。 GitHub上的操作在 GitHub 上新建一个空仓库，仓库的名称是「用户名.github.io」 安装前提安装 Hexo 相当简单。然而在安装前，必须检查电脑中是否已安装下列应用程序：  Node.js   Git    如果您的电">
+  
+    <link rel="alternate" href="/atom.xml" title="Frontend_Depon" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Frontend_Depon</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Suche"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-搭建Hexo博客" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/01/17/搭建Hexo博客/" class="article-date">
+  <time datetime="2018-01-17T03:32:46.000Z" itemprop="datePublished">2018-01-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      使用 Hexo + GitHub 轻松做出一个好看的博客
+    </h1>
+  
 
-
-	<div class="layout-header">
-		<div class="ui fixed transparent inverted main menu panel-header">
-			<div class="container box-header">
-				<div class="title item header-item">
-					<a href="/" title="">Frontend_Depon</a>
-				</div>
-			</div>
-		</div>
-	</div>
-
-
-	<div class="layout-menu">
-
-		<nav class="ui transparent vertical inverted labeled icon menu">
-
-			<a class="item" href="/">
-				<i class="home icon"></i>
-				Home
-			</a>
-
-			<a class="item" href="/archives">
-				<i class="sitemap icon"></i>
-				Sitemap
-			</a>
-
-			<a class="item" href="/page/">
-				<i class="browser icon"></i>
-				Page
-			</a>
-
-		</nav>
-
-	</div>
-
-	<div class="layout-menu-footer">
-
-		<nav class="ui transparent inverted menu">
-
-			<a class="item" href="/">
-				<i class="home icon"></i>
-				Home
-			</a>
-
-			<a class="item" href="/archives">
-				<i class="sitemap icon"></i>
-				Sitemap
-			</a>
-
-			<a class="item" href="/page/">
-				<i class="browser icon"></i>
-				Page
-			</a>
-
-		</nav>
-
-	</div>
-
-
-
-	<div class="layout-content">
-
-
-		<div class="panel-content">
-			<div class="ui grid box-content">
-				<div class="two wide column">
-					&nbsp;
-				</div>
-
-				<div class="twelve wide column">
-
-					<div class="box-post-item">
-						<article class="post-item" itemscope itemtype="http://schema.org/Article">
-
-
-
-
-							<p class="content-meta">
-								<span class="meta-date" itemprop="datePublished" content="2018-01-17">2018-01-17</span>
-
-
-							</p>
-
-
-							<h2 class="box-content-title">
-								<a href="/2018/01/17/搭建Hexo博客/"  itemprop="url"><span class="content-title" itemprop="name">使用 Hexo + GitHub 轻松做出一个好看的博客</span></a>
-							</h2>
-
-							<div class="content post-item-content" itemprop="articleBody">
-
-<h2 id="什么是-Hexo？"><a href="#什么是-Hexo？" class="headerlink" title="什么是 Hexo？"></a>什么是 Hexo？</h2><p>Hexo 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。</p>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="什么是-Hexo？"><a href="#什么是-Hexo？" class="headerlink" title="什么是 Hexo？"></a>什么是 Hexo？</h2><p>Hexo 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。</p>
 <h2 id="GitHub上的操作"><a href="#GitHub上的操作" class="headerlink" title="GitHub上的操作"></a>GitHub上的操作</h2><p>在 GitHub 上新建一个空仓库，仓库的名称是「用户名.github.io」</p>
 <h2 id="安装前提"><a href="#安装前提" class="headerlink" title="安装前提"></a>安装前提</h2><p>安装 Hexo 相当简单。然而在安装前，必须检查电脑中是否已安装下列应用程序：</p>
 <ul>
@@ -181,58 +141,119 @@
 <li><a href="https://xiedaimala.com" target="_blank" rel="noopener">方方老师教程</a></li>
 </ul>
 
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/01/17/搭建Hexo博客/" data-id="cjcil7dzp0001jcui5ya3etjc" class="article-share-link">Teilen</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo-博客/">Hexo  博客</a></li></ul>
 
-							</div>
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2018/01/16/开博大吉/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Älter</strong>
+      <div class="article-nav-title">开博大吉</div>
+    </a>
+  
+</nav>
 
+  
+</article>
 
-							<div class="content-tag">
+</section>
+        
+          <aside id="sidebar">
+  
+    
 
-<a class="tag-link" href="/tags/Hexo-博客/">Hexo  博客</a>
-
-							</div>
-
-
-
-						</article>
-					</div>
-				</div>
-
-				<div class="two wide column">
-					&nbsp;
-				</div>
-
-			</div>
-
-			<div class="panel-post-nav">
-				<div class="box-post-nav">
-		
-
-
-
-					<a href="/2018/01/16/开博大吉/" title="开博大吉">Next &rarr;</a>
-
-
-				</div>
-			</div>
-		</div>
-
-
-	</div>
-
-	<div class="layout-footer" style="clear: both">
-		<div class="panel-footer">
-			<div class="box-footer">
-				<footer class="footer">
-					<p class="cr">&copy; 2018 <a href="https://github.com/foreachsam/"  target="_blank">Serendipity96</a> </p>
-
-					<span class="theme">Powered: <a href="http://hexo.io/" target="_blank">Hexo</a>, Theme: <a href="https://github.com/foreachsam/hexo-theme-aiki" target="_blank">Aiki</a></span>
-				</footer>
-			</div>
-		</div>
-	</div>
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/1/">1</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo-博客/">Hexo  博客</a></li></ul>
+    </div>
+  </div>
 
 
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/1/" style="font-size: 10px;">1</a> <a href="/tags/Hexo-博客/" style="font-size: 10px;">Hexo  博客</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li></ul>
+    </div>
+  </div>
 
 
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">letzter Beitrag</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/01/17/搭建Hexo博客/">使用 Hexo + GitHub 轻松做出一个好看的博客</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/16/开博大吉/">开博大吉</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 Serendipity96<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
 </body>
 </html>

@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+  <meta charset="UTF-8">
+  <meta 
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <meta 
+    http-equiv="X-UA-Compatible" 
+    content="ie=edge">
+  <meta 
+    name="theme-color" 
+    content="#fff" 
+    id="theme-color">
+  <meta 
+    name="description" 
+    content="Hexo">
+  <link 
+    rel="icon" 
+    href="https://demo.theme-kaze.top/img/Kaze.png">
+  <title>【译】来试试这个真正的 JavaScript 调试器吧！</title>
+  
+    
+      <meta 
+        property="og:title" 
+        content="【译】来试试这个真正的 JavaScript 调试器吧！">
+    
+    
+      <meta 
+        property="og:url" 
+        content="http://example.com/2018/02/10/js-debugger/index.html">
+    
+    
+      <meta 
+        property="og:img" 
+        content="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/2/10/1617e7603fe1da63~tplv-t2oaga2asx-image.image">
+    
+    
+    
+      <meta 
+        property="og:type" 
+        content="article">
+      <meta 
+        property="og:article:published_time" 
+        content="2018-02-10">
+      <meta 
+        property="og:article:modified_time" 
+        content="2022-03-13">
+      <meta 
+        property="og:article:author" 
+        content="theme-kaze">
+      
+        
+          <meta 
+            property="og:article:tag" 
+            content="翻译">
+        
+      
+    
+  
+  <script>
+    function loadScript(url, cb) {
+      var script = document.createElement('script');
+      script.src = url;
+      if (cb) script.onload = cb;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+    function loadCSS(href, data, attr) {
+      var sheet = document.createElement('link');
+      sheet.ref = 'stylesheet';
+      sheet.href = href;
+      sheet.dataset[data] = attr;
+      document.head.appendChild(sheet);
+    }
+    function changeCSS(cssFile, data, attr) {
+      var oldlink = document.querySelector(data);
+      var newlink = document.createElement("link");
+      newlink.setAttribute("rel", "stylesheet");
+      newlink.setAttribute("href", cssFile);
+      newlink.dataset.prism = attr;
+      document.head.replaceChild(newlink, oldlink);
+    }
+  </script>
+  
+    
+  
+  <script>
+    // control reverse button
+    var reverseDarkList = {
+      dark: 'light',
+      light: 'dark'
+    };
+    var themeColor = {
+      dark: '#1c1c1e',
+      light: '#fff'
+    }
+    // get the data of css prefers-color-scheme
+    var getCssMediaQuery = function() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    // reverse current darkmode setting function
+    var reverseDarkModeSetting = function() {
+      var setting = localStorage.getItem('user-color-scheme');
+      if(reverseDarkList[setting]) {
+        setting = reverseDarkList[setting];
+      } else if(setting === null) {
+        setting = reverseDarkList[getCssMediaQuery()];
+      } else {
+        return;
+      }
+      localStorage.setItem('user-color-scheme', setting);
+      return setting;
+    };
+    // apply current darkmode setting
+  </script>
+  
+    <script>
+      var setDarkmode = function(mode) {
+      var setting = mode || localStorage.getItem('user-color-scheme');
+      if(setting === getCssMediaQuery()) {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[setting];
+        document.getElementById('theme-color').dataset.mode = setting;
+      } else if(reverseDarkList[setting]) {
+        document.documentElement.setAttribute('data-user-color-scheme', setting);
+        document.getElementById('theme-color').content = themeColor[setting];
+        document.getElementById('theme-color').dataset.mode = setting;
+      } else {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[getCssMediaQuery()];
+        document.getElementById('theme-color').dataset.mode = getCssMediaQuery();
+      }
+    };
+    setDarkmode();
+    </script>
+  
+  
+  <link rel="preload" href="//at.alicdn.com/t/font_1946621_i1kgafibvw.css" as="style" >
+  <link rel="preload" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css" as="style" >
+  
+  
+    <link rel="preload" href="/js/lib/lightbox/baguetteBox.min.js" as="script">
+    <link rel="preload" href="/js/lib/lightbox/baguetteBox.min.css" as="style" >
+  
+  
+    <link rel="preload" href="/js/lib/lozad.min.js" as="script">
+  
+  
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/main.css">
+  
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1946621_i1kgafibvw.css">
+  
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css">
+  
+    <link rel="stylesheet" href="/js/lib/lightbox/baguetteBox.min.css">
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+  <body>
+    <div class="wrapper">
+       
+      <nav class="navbar">
+  <div class="navbar-logo">
+    <span class="navbar-logo-main">
+      
+        <img 
+          class="navbar-logo-img"
+          width="32"
+          height="32"
+          src="https://demo.theme-kaze.top/img/Kaze.png" 
+          alt="blog logo">
+      
+      <span class="navbar-logo-dsc">theme-kaze demo</span>
+    </span>
+  </div>
+  <div class="navbar-menu">
+    
+      <a 
+        href="/" 
+        class="navbar-menu-item">
+        
+          首页
+        
+      </a>
+    
+      <a 
+        href="/archives" 
+        class="navbar-menu-item">
+        
+          归档
+        
+      </a>
+    
+      <a 
+        href="/tags" 
+        class="navbar-menu-item">
+        
+          标签
+        
+      </a>
+    
+      <a 
+        href="/categories" 
+        class="navbar-menu-item">
+        
+          分类
+        
+      </a>
+    
+      <a 
+        href="/about" 
+        class="navbar-menu-item">
+        
+          关于
+        
+      </a>
+    
+      <a 
+        href="/links" 
+        class="navbar-menu-item">
+        
+          友链
+        
+      </a>
+    
+    <a 
+      class="navbar-menu-item darknavbar" 
+      id="dark">
+      <i class="iconfont icon-weather"></i>
+    </a>
+    <a 
+      class="navbar-menu-item searchnavbar" 
+      id="search">
+      <i 
+        class="iconfont icon-search" 
+        style="font-size: 1.2rem; font-weight: 400;">
+      </i>
+    </a>
+  </div>
+</nav> 
+      
+      <div 
+        id="local-search" 
+        style="display: none">
+        <input
+          class="navbar-menu-item"
+          id="search-input"
+          placeholder="请输入搜索内容..." />
+        <div id="search-content"></div>
+      </div>
+      
+      <div class="section-wrap">
+        <div class="container">
+          <div class="columns">
+            <main class="main-column">
+  <div class="image-wrapper">
+    <img 
+      src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/2/10/1617e7603fe1da63~tplv-t2oaga2asx-image.image" 
+      data-src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/2/10/1617e7603fe1da63~tplv-t2oaga2asx-image.image"
+      srcset="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/2/10/1617e7603fe1da63~tplv-t2oaga2asx-image.image"
+      class="image lozad"
+      alt="【译】来试试这个真正的 JavaScript 调试器吧！ thumbnail">
+  </div>
+
+<article class="card card-content">
+  <header>
+    <h1 class="post-title">
+      【译】来试试这个真正的 JavaScript 调试器吧！
+    </h1>
+  </header>
+  <div class="post-meta post-show-meta">
+    <time datetime="2018-02-10T14:48:00.000Z">
+      <i 
+        class="iconfont icon-calendar" 
+        style="margin-right: 2px;">
+      </i>
+      <span>2018-02-10</span>
+    </time>
+    
+      <span class="dot"></span>
+      
+        <a 
+          href="/categories/%E7%BF%BB%E8%AF%91/" 
+          class="post-meta-link">
+          翻译
+        </a>
+      
+    
+    
+      <span class="dot"></span>
+      <span>2.1k 字</span>
+    
+  </div>
+  
+    <div 
+      class="post-meta post-show-meta" 
+      style="margin-top: -10px;">
+      <div style="display: flex; align-items: center;">
+        <i 
+          class="iconfont icon-biaoqian" 
+          style="margin-right: 2px; font-size: 1.15rem;">
+        </i>
+        
+          
+          <a 
+            href="/tags/%E7%BF%BB%E8%AF%91/" 
+            class="post-meta-link">
+            翻译
+          </a>
+        
+      </div>
+    </div>
+  
+  </header>
+  <div 
+    id="section" 
+    class="post-content">
+    <blockquote>
+<ul>
+<li>原文地址：<a target="_blank" rel="noopener" href="https://www.smashingmagazine.com/2018/02/javascript-firefox-debugger/">Debugging JavaScript With A Real Debugger You Did Not Know You Already Have</a></li>
+<li>原文作者：<a target="_blank" rel="noopener" href="https://www.smashingmagazine.com/author/dustindriver-jasonlaster">Dustin Driver</a></li>
+<li>译文出自：<a target="_blank" rel="noopener" href="https://github.com/xitu/gold-miner">掘金翻译计划</a></li>
+<li>本文永久链接：<a target="_blank" rel="noopener" href="https://github.com/xitu/gold-miner/blob/master/TODO/javascript-firefox-debugger.md">https://github.com/xitu/gold-miner/blob/master/TODO/javascript-firefox-debugger.md</a></li>
+<li>译者：<a target="_blank" rel="noopener" href="https://github.com/Serendipity96">Serendipity96</a></li>
+<li>校对者：<a target="_blank" rel="noopener" href="https://github.com/ZhiyuanSun">ZhiyuanSun</a>，<a target="_blank" rel="noopener" href="https://github.com/noahziheng">noahziheng</a></li>
+</ul>
+</blockquote>
+<p><code>console.log</code> 可以告诉你很多关于应用程序的信息，但它不能真正调试你的代码。因此，你需要一个完整的 JavaScript 调试器。新的 Firefox JavaScript 调试器能够帮你写快速且无缺陷的代码。下面来介绍它的用法。</p>
+<p>在这个例子中，我们将用 Debugger 打开一个非常简单的应用程序。此<a target="_blank" rel="noopener" href="https://mozilladevelopers.github.io/sample-todo/01-variables/">应用程序</a>是基于一个基础的 JavaScript 开源框架开发的。在最新版本的<a target="_blank" rel="noopener" href="https://www.mozilla.org/firefox/developer/">Firefox Developer Edition</a>中打开此程序，Mac 系统按 <code>Option</code> + <code>Cmd</code> + <code>S</code> 或者 Windows 系统按 <code>Shift</code> + <code>Ctrl</code> + <code>S</code> 启动 <code>debugger.html</code>。调试器共分为三个窗格：源列表窗格，源代码窗格和工具窗格。</p>
+<p><img  srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/2/10/1617e7603fe1da63~tplv-t2oaga2asx-image.image" class="lozad post-image"src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/2/10/1617e7603fe1da63~tplv-t2oaga2asx-image.image"></p>
+<p><a target="_blank" rel="noopener" href="https://cloud.netlifyusercontent.com/assets/344dbf88-fdf9-42bb-adb4-46f01eedd629/dd605d5c-e94d-43e3-a7ef-94eea52cff9e/image2.png">大图预览</a></p>
+<p>工具窗格进一步分为工具栏，监视表达式，断点，调用堆栈和范围。</p>
+<p><img  srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/2/10/1617e7602497d4e8~tplv-t2oaga2asx-image.image" class="lozad post-image"src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/2/10/1617e7602497d4e8~tplv-t2oaga2asx-image.image"></p>
+<p><a target="_blank" rel="noopener" href="https://cloud.netlifyusercontent.com/assets/344dbf88-fdf9-42bb-adb4-46f01eedd629/2b99b781-28e8-4bff-a5ff-d1ee43c2d432/image3.png">大图预览</a></p>
+<h3 id="停止使用-console-log"><a href="#停止使用-console-log" class="headerlink" title="停止使用 console.log"></a>停止使用 <code>console.log</code></h3><p>使用 <code>console.log</code> 来调试代码是很诱人的。你只需在代码中添加一句 <code>console.log</code> ，然后执行即可找到变量的值，对不对？这确实可以奏效，它可能是麻烦且费时的。在这个例子中，我们将使用 <code>debugger.html</code> 单步执行这个待办事项应用的代码来查找变量的值。</p>
+<p>我们在 <code>debugger.html</code> 的一行代码中添加一个断点，来深入了解待办事项应用程序。断点告诉调试器在这一行上暂停，这样你可以点击代码来看看发生了什么。在这个例子中，我们在 app.js 文件的第 13 行添加一个断点。</p>
+<p><img  srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/2/10/1617e75fcc6065c1~tplv-t2oaga2asx-image.image" class="lozad post-image"src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/2/10/1617e75fcc6065c1~tplv-t2oaga2asx-image.image"></p>
+<p><a target="_blank" rel="noopener" href="https://cloud.netlifyusercontent.com/assets/344dbf88-fdf9-42bb-adb4-46f01eedd629/a3633871-65f2-4815-9270-2b5e19b316f4/image5.gif">大图预览</a></p>
+<p>现在添加一个任务到列表中。代码将会暂停到 addTodo 函数，我们可以深入代码来查看输入的值等。将鼠标悬停在变量上可以看到更多信息。你可以看到锚点和子程序等各种信息：</p>
+<p><img  srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/2/10/1617e75fcd152e6f~tplv-t2oaga2asx-image.image" class="lozad post-image"src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/2/10/1617e75fcd152e6f~tplv-t2oaga2asx-image.image"></p>
+<p><a target="_blank" rel="noopener" href="https://cloud.netlifyusercontent.com/assets/344dbf88-fdf9-42bb-adb4-46f01eedd629/5f23c4d0-5b4d-41ff-9367-e534d0f96168/image4.png">大图预览</a></p>
+<p>你也可以进入 Scopes 面板获取相同的信息。</p>
+<p>现在脚本已经暂停，我们可以使用工具栏来逐步调试。开始&#x2F;暂停按钮正如工具栏上所显示的含义，” Step Over “ 跨越当前代码行，” Step In “ 步入函数调用，” Step Out “ 运行脚本，直到当前函数退出。</p>
+<p><img  srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/2/10/1617e76022cde3e2~tplv-t2oaga2asx-image.image" class="lozad post-image"src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/2/10/1617e76022cde3e2~tplv-t2oaga2asx-image.image"></p>
+<p><a target="_blank" rel="noopener" href="https://cloud.netlifyusercontent.com/assets/344dbf88-fdf9-42bb-adb4-46f01eedd629/2c04dd57-b4b4-42c7-be87-685a71c8df56/image1.png">大图预览</a></p>
+<p>我们也可以使用监视表达式来跟踪变量的值。只需在监视表达式字段中输入一个表达式，调试器将在你逐步执行代码时进行跟踪。在上面的例子中，你可以添加表达式 “ title “和 “ to-do “，当它们被调用时，调试器会显示它们的值。以下情况特别有用：</p>
+<ul>
+<li>你正单步执行并想看变量值的变化；</li>
+<li>你正多次调试同样的东西，并希望看到相同的变量值；</li>
+<li>你想弄清楚为什么那个该死的按钮不起作用。</li>
+</ul>
+<p>你也可以用 <code>debugger.html</code> 去调试 React &#x2F; Redux 应用程序。以下是使用步骤：</p>
+<ul>
+<li>跳转到你要调试的组件。</li>
+<li>参阅左侧的组件大纲（类中的函数）。</li>
+<li>添加断点到相关的函数中。</li>
+<li>暂停并查看组件 props 和 state。</li>
+<li>调用堆栈是已经被简化的，这便于你查看应用程序代码和框架的交集。</li>
+</ul>
+<p>最后，<code>debugger.html</code> 让你看到可能引起错误的混淆或压缩的代码，这在处理像 React &#x2F; Redux 这样的通用框架时特别有用。调试器知道你已暂停的组件，并显示简化的堆栈调用，组件大纲和属性。以下是开发人员 Amit Zur 在 <a target="_blank" rel="noopener" href="https://2017.js-kongress.de/">JS Kongress</a> 上描述他是如何使用 Firefox 调试器调试代码的：</p>
+<iframe width="100%" height="400" src="https://www.youtube.com/embed/Rop3EgPvBMw" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+<p>如果你在新的 <code>debugger.html</code> 中对深入代码走查感兴趣，请转到<a target="_blank" rel="noopener" href="https://mozilladevelopers.github.io/playground/debugger">Mozilla Developer Playground</a>。我们构建了一个系列教程，帮助开发人员学习如何有效地使用该工具来调试代码。</p>
+<h3 id="开源的开发工具"><a href="#开源的开发工具" class="headerlink" title="开源的开发工具"></a>开源的开发工具</h3><p><a target="_blank" rel="noopener" href="https://github.com/devtools-html/debugger.html">debugger.html project</a>大约于两年前推出，同时对所有 Firefox DevTools 进行了全面改进。我们希望使用现代网络技术重建 DevTools，并对全世界的开发者开放。当一项技术开放的时候，能够自由扩展到我们 Mozilla 小团队所能想象的范围之外的任何地方。</p>
+<p>JavaScript 对于任何高级 Web 应用程序都是必不可少的，所以强大的调试器是工具集的关键部分。我们希望构建一些快速，易于使用且适应性强 —— 能够调试未来可能出现的任何新 JavaScript 框架的产品。我们决定使用流行的网络技术，因为我们想与社区紧密合作。这种方法也将改善调试器本身 —— 如果我们采用了 WebPack 并开始在内部使用构建工具和 Source Map，我们希望改进 Source Map 生成和热加载。</p>
+<p><code>debugger.html</code> 是用 React，Redux 和 Babel 构建的。React 组件轻量，可测试又易于设计。我们使用 React Storybook 进行快速的 UI 原型设计和记录共享组件。我们的组件使用 Jest 和 Enzyme 进行测试，这使得在 UI 上迭代更容易。这让使用各种 JavaScript 框架（如 React ）更容易。Babel 前端能让我们做一些像显示左侧边栏中 Component 类和它功能的事情。我们也可以做一些很酷的事情，例如把断点固定到函数中，当你改变你的代码时，它们不会移动。</p>
+<p>Redux Action 对于 UI 来说是一个简单的 API，但它也可以很容易地构建一个独立的 CLI JS 调试器。Redux Store 有查询当前调试状态的选择器。我们的 Reduce 单元测试激发了 Redux Action 并模拟浏览器响应。我们的集成测试使用调试器 Redux Action 来驱动浏览器。功能架构本身被设计为可测试的。</p>
+<p>我们每一步都依靠 Mozilla 开发人员社区。该项目在 <a target="_blank" rel="noopener" href="https://github.com/devtools-html/debugger.html">GitHub</a>  上发布，我们的团队联系世界各地的开发人员向他们寻求帮助。当我们开始时，自动化测试是社区发展的重要组成部分，测试可以预防性能退化，也能很好地记录容易遗漏的行为。这就是为什么我们采取的第一步是为 Redux Store 添加 Redux Action 和 Flow 类型的单元测试。事实上，社区确保我们的 Flow 和 Jest 覆盖率有助于确保每个文件都被打印和测试。</p>
+<p>作为开发者，我们相信工具越强，参与的人越多。我们的核心团队一直很小（2 人），但我们平均每周有 15 个贡献者。社区带来了多样的视角，帮助我们预测挑战并创造了我们从未想到的功能。我们现在整理了 24 个不同库的调用堆栈，其中有许多我们从未听说过。我们还在源代码树中显示 WebPack 和 Angular 映射。</p>
+<p>我们计划将所有的 Firefox DevTools 移到 GitHub 上，以便更广泛的受众使用和改进它们。我们很乐意为您做出贡献。转到 <a target="_blank" rel="noopener" href="https://github.com/devtools-html/debugger.html"><code>debugger.html</code></a> 的 GitHub 项目页面。我们已经创建了一个关于如何在自己的机器上运行调试器的完整的指令列表，在列表里你可以修改使它做任何你想做的事。使用它来调试任何 JavaScript 代码 —— 浏览器，终端，服务器，手机，机器人。如果您有改进的方法，请通过 GitHub 告诉我们。</p>
+<p><strong>您可以在<a target="_blank" rel="noopener" href="https://www.mozilla.org/firefox">这里</a>下载最新版本的 Firefox（和 DevTools）。</strong></p>
+<hr>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 是一个翻译优质互联网技术文章的社区，文章来源为 <a target="_blank" rel="noopener" href="https://juejin.im/">掘金</a> 上的英文分享文章。内容覆盖 <a target="_blank" rel="noopener" href="https://github.com/xitu/gold-miner#android">Android</a>、<a target="_blank" rel="noopener" href="https://github.com/xitu/gold-miner#ios">iOS</a>、<a target="_blank" rel="noopener" href="https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF">前端</a>、<a target="_blank" rel="noopener" href="https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF">后端</a>、<a target="_blank" rel="noopener" href="https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE">区块链</a>、<a target="_blank" rel="noopener" href="https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81">产品</a>、<a target="_blank" rel="noopener" href="https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1">设计</a>、<a target="_blank" rel="noopener" href="https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a>等领域，想要查看更多优质译文请持续关注 <a target="_blank" rel="noopener" href="https://github.com/xitu/gold-miner">掘金翻译计划</a>、<a target="_blank" rel="noopener" href="http://weibo.com/juejinfanyi">官方微博</a>、<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/juejinfanyi">知乎专栏</a>。</p>
+</blockquote>
+
+  </div>
+  <div>
+    
+      <div 
+        class="post-note note-warning copyright" 
+        style="margin-top: 42px">
+        <p>
+          <span style="font-weight: bold;">作者：</span><a 
+            target="_blank" 
+            rel="nofollow noopener noreferrer" 
+            href="/about">
+            theme-kaze
+          </a>
+        </p>
+        <p>
+          <span style="font-weight: bold;">文章链接：</span><a 
+            target="_blank" 
+            rel="nofollow noopener noreferrer" 
+            href="http://example.com/2018/02/10/js-debugger/">
+            http://example.com/2018/02/10/js-debugger/
+          </a>
+        </p>
+        <p><span style="font-weight: bold;">版权声明：</span>本博客所有文章除特别声明外，均采用<a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">CC BY-NC-SA 4.0 协议</a>。转载请注明出处！</p>
+      </div>
+    
+  </div>
+</article>
+<div class="nav">
+  
+    <div class="nav-item-prev">
+      <a 
+        href="/2019/09/29/modules/" 
+        class="nav-link">
+        <i class="iconfont icon-left nav-prev-icon"></i>
+        <div>
+          <div class="nav-label">上一篇</div>
+          
+            <div class="nav-title">还傻傻分不清 module.exports 和 export default  吗？ </div>
+          
+        </div>
+      </a>
+    </div>
+  
+  
+</div>
+
+<div 
+  class="card card-content toc-card" 
+  id="mobiletoc">
+  <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>目录
+</div>
+<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%81%9C%E6%AD%A2%E4%BD%BF%E7%94%A8-console-log"><span class="toc-text">停止使用 console.log</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%80%E6%BA%90%E7%9A%84%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7"><span class="toc-text">开源的开发工具</span></a></li></ol>
+</div></main>
+            <aside class="left-column">
+              
+              <div class="card card-author">
+                
+  <img 
+    src="https://demo.theme-kaze.top/img/Kaze.png" 
+    class="author-img"
+    width="88"
+    height="88"
+    alt="author avatar">
+
+<p class="author-name">theme-kaze</p>
+<p class="author-description">designed by theme-kaze</p>
+<div class="author-message">
+  <a 
+    class="author-posts-count" 
+    href="/archives">
+    <span>3</span>
+    <span>文章</span>
+  </a>
+  <a 
+    class="author-categories-count" 
+    href="/categories">
+    <span>3</span>
+    <span>分类</span>
+  </a>
+  <a 
+    class="author-tags-count" 
+    href="/tags">
+    <span>3</span>
+    <span>标签</span>
+  </a>
+</div>
+
+              </div>
+               <div class="sticky-tablet">
+  
+  
+    <article class="display-when-two-columns spacer">
+      <div class="card card-content toc-card">
+        <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>目录
+</div>
+<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%81%9C%E6%AD%A2%E4%BD%BF%E7%94%A8-console-log"><span class="toc-text">停止使用 console.log</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%80%E6%BA%90%E7%9A%84%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7"><span class="toc-text">开源的开发工具</span></a></li></ol>
+      </div>
+    </article>
+  
+  
+  <article class="card card-content categories-widget">
+    <div class="categories-card">
+  <div class="categories-header">
+    <i 
+      class="iconfont icon-fenlei" 
+      style="padding-right: 2px;">
+    </i>分类
+  </div>
+  <div class="categories-list">
+    
+      <a href="/categories/%E5%BC%80%E6%BA%90/">
+        <div class="categories-list-item">
+          开源
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+      <a href="/categories/%E7%BF%BB%E8%AF%91/">
+        <div class="categories-list-item">
+          翻译
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+      <a href="/categories/JavaScript/">
+        <div class="categories-list-item">
+          JavaScript
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  <article class="card card-content tags-widget">
+    <div class="tags-card">
+  <div class="tags-header">
+    <i 
+      class="iconfont icon-biaoqian" 
+      style="padding-right: 2px;">
+    </i>热门标签
+  </div>
+  <div class="tags-list">
+    
+      <a 
+        href="/tags/%E6%A8%A1%E5%9D%97%E5%8C%96/" 
+        title="模块化">
+        <div class="tags-list-item">模块化</div>
+      </a>
+    
+      <a 
+        href="/tags/%E7%BF%BB%E8%AF%91/" 
+        title="翻译">
+        <div class="tags-list-item">翻译</div>
+      </a>
+    
+      <a 
+        href="/tags/%E5%BC%80%E6%BA%90/" 
+        title="开源">
+        <div class="tags-list-item">开源</div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+            </aside>
+            <aside class="right-column">
+              <div class="sticky-widescreen">
+  
+  
+    <article class="card card-content toc-card">
+      <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>目录
+</div>
+<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%81%9C%E6%AD%A2%E4%BD%BF%E7%94%A8-console-log"><span class="toc-text">停止使用 console.log</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%80%E6%BA%90%E7%9A%84%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7"><span class="toc-text">开源的开发工具</span></a></li></ol>
+    </article>
+  
+  
+  <article class="card card-content">
+    <div class="recent-posts-card">
+  <div class="recent-posts-header">
+    <i 
+      class="iconfont icon-wenzhang_huaban" 
+      style="padding-right: 2px;">
+    </i>最近文章
+  </div>
+  <div class="recent-posts-list">
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2021-09-13</div>
+        <a href="/2021/09/13/contribute-opensource-without-code/"><div class="recent-posts-item-content">不写代码，如何为开源项目做贡献？</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2019-09-29</div>
+        <a href="/2019/09/29/modules/"><div class="recent-posts-item-content">还傻傻分不清 module.exports 和 export default  吗？</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2018-02-10</div>
+        <a href="/2018/02/10/js-debugger/"><div class="recent-posts-item-content">【译】来试试这个真正的 JavaScript 调试器吧！</div></a>
+      </div>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </div>
+     
+    <footer class="footer">
+  <div class="footer-container">
+    <div>
+      <div class="footer-dsc">
+        <span>
+          Copyright ©
+          
+            2020 -
+          
+          2022
+        </span>
+        &nbsp;
+        <a 
+          href="/" 
+          class="footer-link">
+          theme-kaze demo
+        </a>
+      </div>
+    </div>
+
+    
+      <div class="footer-dsc">
+        
+          Powered by
+          <a 
+            href="https://hexo.io/" 
+            class="footer-link" 
+            target="_blank" 
+            rel="nofollow noopener noreferrer">
+            &nbsp;Hexo
+          </a>
+        
+        
+          <span>&nbsp;|&nbsp;</span>
+        
+        
+          Theme -
+          <a 
+            href="https://github.com/theme-kaze" 
+            class="footer-link" 
+            target="_blank"
+            rel="nofollow noopener noreferrer">
+            &nbsp;Kaze
+          </a>
+        
+      </div>
+    
+    
+    
+    
+</footer> 
+    
+  <a 
+    role="button" 
+    id="scrollbutton" 
+    class="basebutton" 
+    aria-label="回到顶部">
+    <i class="iconfont icon-arrowleft button-icon"></i>
+  </a>
+
+<a 
+  role="button" 
+  id="menubutton"
+  aria-label="menu button"
+  class="basebutton">
+  <i class="iconfont icon-menu button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="popbutton" 
+  class="basebutton" 
+  aria-label="控制中心">
+  <i class="iconfont icon-expand button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="darkbutton" 
+  class="basebutton darkwidget" 
+  aria-label="夜色模式">
+  <i class="iconfont icon-weather button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="searchbutton" 
+  class="basebutton searchwidget" 
+  aria-label="搜索">
+  <i class="iconfont icon-search button-icon"></i>
+</a> 
+     
+     
+     
+      <script>
+  var addImgLayout = function () {
+    var img = document.querySelectorAll('.post-content img')
+    var i
+    for (i = 0; i < img.length; i++) {
+      var wrapper = document.createElement('a')
+      wrapper.setAttribute('href', img[i].getAttribute('data-src'))
+      wrapper.setAttribute('aria-label', 'illustration')
+      wrapper.style.cssText =
+        'width: 100%; display: flex; justify-content: center;'
+      if (img[i].alt) wrapper.dataset.caption = img[i].alt
+      wrapper.dataset.nolink = true
+      img[i].before(wrapper)
+      wrapper.append(img[i])
+      var divWrap = document.createElement('div')
+      divWrap.classList.add('gallery')
+      wrapper.before(divWrap)
+      divWrap.append(wrapper)
+    }
+    baguetteBox.run('.gallery')
+  }
+</script>
+<script>
+  loadScript(
+    "/js/lib/lightbox/baguetteBox.min.js",
+    addImgLayout
+  )
+</script>
+ 
+     
+     
+    <script src="/js/main.js"></script> 
+     
+    
+      <script>
+        var addLazyload = function () {
+          var observer = lozad('.lozad', {
+            load: function (el) {
+              el.srcset = el.getAttribute('data-src')
+            },
+            loaded: function (el) {
+              el.classList.add('loaded')
+            },
+          })
+          observer.observe()
+        }
+      </script>
+      <script>
+        loadScript('/js/lib/lozad.min.js', addLazyload)
+      </script>
+     
+    
+    
+  </body>
+</html>

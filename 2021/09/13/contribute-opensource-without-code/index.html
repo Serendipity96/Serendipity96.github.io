@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+  <meta charset="UTF-8">
+  <meta 
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <meta 
+    http-equiv="X-UA-Compatible" 
+    content="ie=edge">
+  <meta 
+    name="theme-color" 
+    content="#fff" 
+    id="theme-color">
+  <meta 
+    name="description" 
+    content="Hexo">
+  <link 
+    rel="icon" 
+    href="https://demo.theme-kaze.top/img/Kaze.png">
+  <title>不写代码，如何为开源项目做贡献？</title>
+  
+    
+      <meta 
+        property="og:title" 
+        content="不写代码，如何为开源项目做贡献？">
+    
+    
+      <meta 
+        property="og:url" 
+        content="http://example.com/2021/09/13/contribute-opensource-without-code/index.html">
+    
+    
+      <meta 
+        property="og:img" 
+        content="https://demo.theme-kaze.top/img/Kaze.png">
+    
+    
+    
+      <meta 
+        property="og:type" 
+        content="article">
+      <meta 
+        property="og:article:published_time" 
+        content="2021-09-13">
+      <meta 
+        property="og:article:modified_time" 
+        content="2022-03-13">
+      <meta 
+        property="og:article:author" 
+        content="theme-kaze">
+      
+        
+          <meta 
+            property="og:article:tag" 
+            content="开源">
+        
+      
+    
+  
+  <script>
+    function loadScript(url, cb) {
+      var script = document.createElement('script');
+      script.src = url;
+      if (cb) script.onload = cb;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+    function loadCSS(href, data, attr) {
+      var sheet = document.createElement('link');
+      sheet.ref = 'stylesheet';
+      sheet.href = href;
+      sheet.dataset[data] = attr;
+      document.head.appendChild(sheet);
+    }
+    function changeCSS(cssFile, data, attr) {
+      var oldlink = document.querySelector(data);
+      var newlink = document.createElement("link");
+      newlink.setAttribute("rel", "stylesheet");
+      newlink.setAttribute("href", cssFile);
+      newlink.dataset.prism = attr;
+      document.head.replaceChild(newlink, oldlink);
+    }
+  </script>
+  
+    
+  
+  <script>
+    // control reverse button
+    var reverseDarkList = {
+      dark: 'light',
+      light: 'dark'
+    };
+    var themeColor = {
+      dark: '#1c1c1e',
+      light: '#fff'
+    }
+    // get the data of css prefers-color-scheme
+    var getCssMediaQuery = function() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    // reverse current darkmode setting function
+    var reverseDarkModeSetting = function() {
+      var setting = localStorage.getItem('user-color-scheme');
+      if(reverseDarkList[setting]) {
+        setting = reverseDarkList[setting];
+      } else if(setting === null) {
+        setting = reverseDarkList[getCssMediaQuery()];
+      } else {
+        return;
+      }
+      localStorage.setItem('user-color-scheme', setting);
+      return setting;
+    };
+    // apply current darkmode setting
+  </script>
+  
+    <script>
+      var setDarkmode = function(mode) {
+      var setting = mode || localStorage.getItem('user-color-scheme');
+      if(setting === getCssMediaQuery()) {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[setting];
+        document.getElementById('theme-color').dataset.mode = setting;
+      } else if(reverseDarkList[setting]) {
+        document.documentElement.setAttribute('data-user-color-scheme', setting);
+        document.getElementById('theme-color').content = themeColor[setting];
+        document.getElementById('theme-color').dataset.mode = setting;
+      } else {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[getCssMediaQuery()];
+        document.getElementById('theme-color').dataset.mode = getCssMediaQuery();
+      }
+    };
+    setDarkmode();
+    </script>
+  
+  
+  <link rel="preload" href="//at.alicdn.com/t/font_1946621_i1kgafibvw.css" as="style" >
+  <link rel="preload" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css" as="style" >
+  
+  
+    <link rel="preload" href="/js/lib/lightbox/baguetteBox.min.js" as="script">
+    <link rel="preload" href="/js/lib/lightbox/baguetteBox.min.css" as="style" >
+  
+  
+    <link rel="preload" href="/js/lib/lozad.min.js" as="script">
+  
+  
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/main.css">
+  
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1946621_i1kgafibvw.css">
+  
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css">
+  
+    <link rel="stylesheet" href="/js/lib/lightbox/baguetteBox.min.css">
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+  <body>
+    <div class="wrapper">
+       
+      <nav class="navbar">
+  <div class="navbar-logo">
+    <span class="navbar-logo-main">
+      
+        <img 
+          class="navbar-logo-img"
+          width="32"
+          height="32"
+          src="https://demo.theme-kaze.top/img/Kaze.png" 
+          alt="blog logo">
+      
+      <span class="navbar-logo-dsc">theme-kaze demo</span>
+    </span>
+  </div>
+  <div class="navbar-menu">
+    
+      <a 
+        href="/" 
+        class="navbar-menu-item">
+        
+          首页
+        
+      </a>
+    
+      <a 
+        href="/archives" 
+        class="navbar-menu-item">
+        
+          归档
+        
+      </a>
+    
+      <a 
+        href="/tags" 
+        class="navbar-menu-item">
+        
+          标签
+        
+      </a>
+    
+      <a 
+        href="/categories" 
+        class="navbar-menu-item">
+        
+          分类
+        
+      </a>
+    
+      <a 
+        href="/about" 
+        class="navbar-menu-item">
+        
+          关于
+        
+      </a>
+    
+      <a 
+        href="/links" 
+        class="navbar-menu-item">
+        
+          友链
+        
+      </a>
+    
+    <a 
+      class="navbar-menu-item darknavbar" 
+      id="dark">
+      <i class="iconfont icon-weather"></i>
+    </a>
+    <a 
+      class="navbar-menu-item searchnavbar" 
+      id="search">
+      <i 
+        class="iconfont icon-search" 
+        style="font-size: 1.2rem; font-weight: 400;">
+      </i>
+    </a>
+  </div>
+</nav> 
+      
+      <div 
+        id="local-search" 
+        style="display: none">
+        <input
+          class="navbar-menu-item"
+          id="search-input"
+          placeholder="请输入搜索内容..." />
+        <div id="search-content"></div>
+      </div>
+      
+      <div class="section-wrap">
+        <div class="container">
+          <div class="columns">
+            <main class="main-column">
+<article class="card card-content">
+  <header>
+    <h1 class="post-title">
+      不写代码，如何为开源项目做贡献？
+    </h1>
+  </header>
+  <div class="post-meta post-show-meta">
+    <time datetime="2021-09-13T11:24:00.000Z">
+      <i 
+        class="iconfont icon-calendar" 
+        style="margin-right: 2px;">
+      </i>
+      <span>2021-09-13</span>
+    </time>
+    
+      <span class="dot"></span>
+      
+        <a 
+          href="/categories/%E5%BC%80%E6%BA%90/" 
+          class="post-meta-link">
+          开源
+        </a>
+      
+    
+    
+      <span class="dot"></span>
+      <span>1.8k 字</span>
+    
+  </div>
+  
+    <div 
+      class="post-meta post-show-meta" 
+      style="margin-top: -10px;">
+      <div style="display: flex; align-items: center;">
+        <i 
+          class="iconfont icon-biaoqian" 
+          style="margin-right: 2px; font-size: 1.15rem;">
+        </i>
+        
+          
+          <a 
+            href="/tags/%E5%BC%80%E6%BA%90/" 
+            class="post-meta-link">
+            开源
+          </a>
+        
+      </div>
+    </div>
+  
+  </header>
+  <div 
+    id="section" 
+    class="post-content">
+    <p>笔者为开源项目贡献过几个 PR，提交过几个 issue，直到现在还清晰记得几年前第一个 PR 被 merge 时的兴奋，体验到了参与开源的乐趣。但是只停留在了 contributor 阶段，没有下文了，因为笔者后来不做研发了，<strong>认为不熟悉代码、不能修 bug 就没有贡献的机会了。</strong></p>
+<p>这里是有一个误区的，并非只有贡献代码、修复 bug 才是为项目做贡献。成为贡献者只能通过贡献代码的方式吗？<strong>如果我不会写代码，并非开发者，怎样才能成为一个开源项目的贡献者，甚至晋升为 committer 呢？</strong></p>
+<p>笔者梳理之后，发现有非常多的方式，在这里分享给大家，无论是不是开发者，都可以实践。（笔者也在实践的路上）</p>
+<h2 id="非代码方式"><a href="#非代码方式" class="headerlink" title="非代码方式"></a>非代码方式</h2><h3 id="写文章"><a href="#写文章" class="headerlink" title="写文章"></a>写文章</h3><p>写文章是一个很容易被忽略的方式，我们可以通过文章来宣传、布道某个技术。比如撰写某个项目的上手指南、踩坑记录、架构设计分析、实现原理等等。</p>
+<p>如果开始写文章比较困难，可以先从翻译做起，无论是中译英还是英译中，只要是对这个项目有意义的内容，都是在为它做贡献。</p>
+<p>亦或是你观看了别人的技术实战分享，把别人的分享整理成文字版，分享到社区中，帮助更多人了解项目。</p>
+<p>笔者还注意到，有些贡献者把文章整理成一本开发小册、或者一本专业书籍，系统地向其他人介绍某项技术。</p>
+<h3 id="制作视频"><a href="#制作视频" class="headerlink" title="制作视频"></a>制作视频</h3><p>制作视频也是一个不错的方式。我们可以把文字的方式转换成视频，用视频的方式介绍某个开源项目，录制上手指南、踩坑记录、架构设计分析、实现原理等等。笔者也看到了很多项目采用视频的方式介绍，视频可能是动画的形式，也可能是真人讲解，无论哪一种，视频在呈现上会比文字更生动有趣一些。</p>
+<p>不过前期剪辑视频对于新手来说工作量可能比较大。</p>
+<h3 id="大会分享"><a href="#大会分享" class="headerlink" title="大会分享"></a>大会分享</h3><p>如果你不害羞、喜欢外分享，那么去技术大会上分享、布道开源项目也是一个很不错的选择。这对了解项目的新手可能有难度，假以时日，当我们从小白进阶成熟悉者时，去分享就比较容易达成了。分享可以锻炼自己的表达能力、逻辑思维能力，还可以锻炼自己的胆量~（也可能收获到橄榄枝）</p>
+<h3 id="完善文档"><a href="#完善文档" class="headerlink" title="完善文档"></a>完善文档</h3><p>大多数开发者并不喜欢写文档，但是文档是其他人了解项目、上手项目的重要途径。笔者曾经的开发经历中，如果遇到一份清晰详细的文档，感觉是非常幸运的事情，上手项目会快很多。文档内容不限于启动说明，如果有架构设计、原理介绍再好不过了。</p>
+<p>我们可以为感兴趣的开源项目提交文档，甚至是修复文档，比如：</p>
+<ul>
+<li>代码更新，文档没有同步更新</li>
+<li>修复错误的下载链接、文档链接</li>
+<li>优化文档，修改文档描述，使其更易理解</li>
+<li>提交架构设计、原理介绍文档</li>
+</ul>
+<h3 id="建设本地社区，组织-x2F-参与活动"><a href="#建设本地社区，组织-x2F-参与活动" class="headerlink" title="建设本地社区，组织&#x2F;参与活动"></a>建设本地社区，组织&#x2F;参与活动</h3><p>如果你对一个项目很感兴趣，参与到本地的社区中，和志同道合的人交流、组织当地的活动，为项目发展做贡献。</p>
+<p>如果没有本地社区，你可以作为发起人建设本地社区。笔者了解到 Apache 软件基金会鼓励大家建设 Local Community，比如 ALC Beijing。像其他的技术社区，如：KubeSphere、云原生社区都在积极发展本地社区。</p>
+<h3 id="积极参与社区讨论"><a href="#积极参与社区讨论" class="headerlink" title="积极参与社区讨论"></a>积极参与社区讨论</h3><h4 id="活跃在-Apache-mail-list"><a href="#活跃在-Apache-mail-list" class="headerlink" title="活跃在 Apache mail list"></a>活跃在 Apache mail list</h4><p>Apache 文化鼓励大家通过邮件列表的形式讨论问题、做决策，所有的事项都要有所记录。每一个 Apache 项目都有自己专属的邮件列表，如果对项目有什么想法，社区非常鼓励大家到邮件列表讨论。</p>
+<p>我们可以：</p>
+<ul>
+<li>为项目发版投票</li>
+<li>回复其他人发起的讨论，表达自己的观点</li>
+<li>发起一次讨论</li>
+</ul>
+<p>为什么是邮件列表？</p>
+<p>邮件列表给我的感觉很古老，笔者去了解了 Apache 软件基金会发展历史，最初基金会的创始人是通过邮件列表的方式讨论问题，难道是古老文化的保留？</p>
+<p>虽然互联网发展迅速，但是世界上仍有接收图片困难、使用其他软件的困难，尽管是我们熟知的 wechat、Twitter 使用者也没有覆盖全球，但是使用邮件能够以最小门槛的方式与他人建立联系，保障全世界各地的人都能参加到社区讨论中，这就是 Apache 软件基金会保留邮件列表方式的初衷。</p>
+<h4 id="活跃在-Github"><a href="#活跃在-Github" class="headerlink" title="活跃在 Github"></a>活跃在 Github</h4><p>Github 是开发者最常逛的网站了，大多数的开源项目都托管在 Github 上。我可以在感兴趣的项目下</p>
+<ul>
+<li>提 issue 说出我的想法，项目的改进方向</li>
+<li>提交一个 bug report</li>
+<li>review 其他小伙伴提交的 pr</li>
+</ul>
+<p>这些都是为开源项目做贡献的方式。</p>
+<h4 id="Apache-mail-list-vs-Github"><a href="#Apache-mail-list-vs-Github" class="headerlink" title="Apache mail list vs Github"></a>Apache mail list vs Github</h4><p>有 Github 为什么还要使用邮件列表？代码托管在 Github ，看起来社区的协作工作好像都是在 Github 上完成的呀？</p>
+<p>在邮件列表里讨论问题，如果大家没有提出反对意见，可以默许为大家通过提议。如果有反对意见，大家会充分讨论，最终达成一致或搁置。</p>
+<p>使用邮件列表的方式讨论，也是对 Apache 文化的认同。遵循 Apache 规则的项目，邮件列表是是社区的首要阵地，Github 是一个方便的协同工具。</p>
+<h2 id="代码方式"><a href="#代码方式" class="headerlink" title="代码方式"></a>代码方式</h2><h3 id="贡献功能、修复-bug"><a href="#贡献功能、修复-bug" class="headerlink" title="贡献功能、修复 bug"></a>贡献功能、修复 bug</h3><p>当然了，开源项目肯定是离不开代码的。如果开源项目的技术栈你很熟悉，很快就能上手贡献代码，和社区小伙伴们一起完善相关功能、修复 bug，持续贡献，成为项目 contributor，进一步提名成为 committer、PMC 是很容易的事情。大多数的贡献者都是通过提交代码的方式成为 committer 的，但是作为像笔者这样不熟悉代码的小伙伴，这一条就不适合了。</p>
+<p>这里需要注意一点，committer 是对贡献者过往贡献的肯定，不会因为未来不再贡献而去除 committer 身份，也不会因为是 committer 而有更大的权利，社区中人人平等。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文介绍了很多成为开源项贡献的途径，如果你有很感兴趣的开源项目却不熟悉代码，又想参与到开源社区中，写文章、做视频、对外分享、建立本地社区、积极参与社区讨论都是很不错方式哦，欢迎实践。</p>
+
+  </div>
+  <div>
+    
+      <div 
+        class="post-note note-warning copyright" 
+        style="margin-top: 42px">
+        <p>
+          <span style="font-weight: bold;">作者：</span><a 
+            target="_blank" 
+            rel="nofollow noopener noreferrer" 
+            href="/about">
+            theme-kaze
+          </a>
+        </p>
+        <p>
+          <span style="font-weight: bold;">文章链接：</span><a 
+            target="_blank" 
+            rel="nofollow noopener noreferrer" 
+            href="http://example.com/2021/09/13/contribute-opensource-without-code/">
+            http://example.com/2021/09/13/contribute-opensource-without-code/
+          </a>
+        </p>
+        <p><span style="font-weight: bold;">版权声明：</span>本博客所有文章除特别声明外，均采用<a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">CC BY-NC-SA 4.0 协议</a>。转载请注明出处！</p>
+      </div>
+    
+  </div>
+</article>
+<div class="nav">
+  
+  
+    <div class="nav-item-next">
+      <a 
+        href="/2019/09/29/modules/" 
+        class="nav-link">
+        <div>
+          <div class="nav-label">下一篇</div>
+          
+            <div class="nav-title">还傻傻分不清 module.exports 和 export default  吗？ </div>
+          
+        </div>
+        <i class="iconfont icon-right nav-next-icon"></i>
+      </a>
+    </div>
+  
+</div>
+
+<div 
+  class="card card-content toc-card" 
+  id="mobiletoc">
+  <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>目录
+</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%9E%E4%BB%A3%E7%A0%81%E6%96%B9%E5%BC%8F"><span class="toc-text">非代码方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%99%E6%96%87%E7%AB%A0"><span class="toc-text">写文章</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%B6%E4%BD%9C%E8%A7%86%E9%A2%91"><span class="toc-text">制作视频</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%A7%E4%BC%9A%E5%88%86%E4%BA%AB"><span class="toc-text">大会分享</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%8C%E5%96%84%E6%96%87%E6%A1%A3"><span class="toc-text">完善文档</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BB%BA%E8%AE%BE%E6%9C%AC%E5%9C%B0%E7%A4%BE%E5%8C%BA%EF%BC%8C%E7%BB%84%E7%BB%87-x2F-%E5%8F%82%E4%B8%8E%E6%B4%BB%E5%8A%A8"><span class="toc-text">建设本地社区，组织&#x2F;参与活动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A7%AF%E6%9E%81%E5%8F%82%E4%B8%8E%E7%A4%BE%E5%8C%BA%E8%AE%A8%E8%AE%BA"><span class="toc-text">积极参与社区讨论</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B4%BB%E8%B7%83%E5%9C%A8-Apache-mail-list"><span class="toc-text">活跃在 Apache mail list</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B4%BB%E8%B7%83%E5%9C%A8-Github"><span class="toc-text">活跃在 Github</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Apache-mail-list-vs-Github"><span class="toc-text">Apache mail list vs Github</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E6%96%B9%E5%BC%8F"><span class="toc-text">代码方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B4%A1%E7%8C%AE%E5%8A%9F%E8%83%BD%E3%80%81%E4%BF%AE%E5%A4%8D-bug"><span class="toc-text">贡献功能、修复 bug</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol>
+</div></main>
+            <aside class="left-column">
+              
+              <div class="card card-author">
+                
+  <img 
+    src="https://demo.theme-kaze.top/img/Kaze.png" 
+    class="author-img"
+    width="88"
+    height="88"
+    alt="author avatar">
+
+<p class="author-name">theme-kaze</p>
+<p class="author-description">designed by theme-kaze</p>
+<div class="author-message">
+  <a 
+    class="author-posts-count" 
+    href="/archives">
+    <span>3</span>
+    <span>文章</span>
+  </a>
+  <a 
+    class="author-categories-count" 
+    href="/categories">
+    <span>3</span>
+    <span>分类</span>
+  </a>
+  <a 
+    class="author-tags-count" 
+    href="/tags">
+    <span>3</span>
+    <span>标签</span>
+  </a>
+</div>
+
+              </div>
+               <div class="sticky-tablet">
+  
+  
+    <article class="display-when-two-columns spacer">
+      <div class="card card-content toc-card">
+        <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>目录
+</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%9E%E4%BB%A3%E7%A0%81%E6%96%B9%E5%BC%8F"><span class="toc-text">非代码方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%99%E6%96%87%E7%AB%A0"><span class="toc-text">写文章</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%B6%E4%BD%9C%E8%A7%86%E9%A2%91"><span class="toc-text">制作视频</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%A7%E4%BC%9A%E5%88%86%E4%BA%AB"><span class="toc-text">大会分享</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%8C%E5%96%84%E6%96%87%E6%A1%A3"><span class="toc-text">完善文档</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BB%BA%E8%AE%BE%E6%9C%AC%E5%9C%B0%E7%A4%BE%E5%8C%BA%EF%BC%8C%E7%BB%84%E7%BB%87-x2F-%E5%8F%82%E4%B8%8E%E6%B4%BB%E5%8A%A8"><span class="toc-text">建设本地社区，组织&#x2F;参与活动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A7%AF%E6%9E%81%E5%8F%82%E4%B8%8E%E7%A4%BE%E5%8C%BA%E8%AE%A8%E8%AE%BA"><span class="toc-text">积极参与社区讨论</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B4%BB%E8%B7%83%E5%9C%A8-Apache-mail-list"><span class="toc-text">活跃在 Apache mail list</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B4%BB%E8%B7%83%E5%9C%A8-Github"><span class="toc-text">活跃在 Github</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Apache-mail-list-vs-Github"><span class="toc-text">Apache mail list vs Github</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E6%96%B9%E5%BC%8F"><span class="toc-text">代码方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B4%A1%E7%8C%AE%E5%8A%9F%E8%83%BD%E3%80%81%E4%BF%AE%E5%A4%8D-bug"><span class="toc-text">贡献功能、修复 bug</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol>
+      </div>
+    </article>
+  
+  
+  <article class="card card-content categories-widget">
+    <div class="categories-card">
+  <div class="categories-header">
+    <i 
+      class="iconfont icon-fenlei" 
+      style="padding-right: 2px;">
+    </i>分类
+  </div>
+  <div class="categories-list">
+    
+      <a href="/categories/%E5%BC%80%E6%BA%90/">
+        <div class="categories-list-item">
+          开源
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+      <a href="/categories/%E7%BF%BB%E8%AF%91/">
+        <div class="categories-list-item">
+          翻译
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+      <a href="/categories/JavaScript/">
+        <div class="categories-list-item">
+          JavaScript
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  <article class="card card-content tags-widget">
+    <div class="tags-card">
+  <div class="tags-header">
+    <i 
+      class="iconfont icon-biaoqian" 
+      style="padding-right: 2px;">
+    </i>热门标签
+  </div>
+  <div class="tags-list">
+    
+      <a 
+        href="/tags/%E6%A8%A1%E5%9D%97%E5%8C%96/" 
+        title="模块化">
+        <div class="tags-list-item">模块化</div>
+      </a>
+    
+      <a 
+        href="/tags/%E7%BF%BB%E8%AF%91/" 
+        title="翻译">
+        <div class="tags-list-item">翻译</div>
+      </a>
+    
+      <a 
+        href="/tags/%E5%BC%80%E6%BA%90/" 
+        title="开源">
+        <div class="tags-list-item">开源</div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+            </aside>
+            <aside class="right-column">
+              <div class="sticky-widescreen">
+  
+  
+    <article class="card card-content toc-card">
+      <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>目录
+</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%9E%E4%BB%A3%E7%A0%81%E6%96%B9%E5%BC%8F"><span class="toc-text">非代码方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%99%E6%96%87%E7%AB%A0"><span class="toc-text">写文章</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%B6%E4%BD%9C%E8%A7%86%E9%A2%91"><span class="toc-text">制作视频</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%A7%E4%BC%9A%E5%88%86%E4%BA%AB"><span class="toc-text">大会分享</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%8C%E5%96%84%E6%96%87%E6%A1%A3"><span class="toc-text">完善文档</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BB%BA%E8%AE%BE%E6%9C%AC%E5%9C%B0%E7%A4%BE%E5%8C%BA%EF%BC%8C%E7%BB%84%E7%BB%87-x2F-%E5%8F%82%E4%B8%8E%E6%B4%BB%E5%8A%A8"><span class="toc-text">建设本地社区，组织&#x2F;参与活动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A7%AF%E6%9E%81%E5%8F%82%E4%B8%8E%E7%A4%BE%E5%8C%BA%E8%AE%A8%E8%AE%BA"><span class="toc-text">积极参与社区讨论</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B4%BB%E8%B7%83%E5%9C%A8-Apache-mail-list"><span class="toc-text">活跃在 Apache mail list</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B4%BB%E8%B7%83%E5%9C%A8-Github"><span class="toc-text">活跃在 Github</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Apache-mail-list-vs-Github"><span class="toc-text">Apache mail list vs Github</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E6%96%B9%E5%BC%8F"><span class="toc-text">代码方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B4%A1%E7%8C%AE%E5%8A%9F%E8%83%BD%E3%80%81%E4%BF%AE%E5%A4%8D-bug"><span class="toc-text">贡献功能、修复 bug</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol>
+    </article>
+  
+  
+  <article class="card card-content">
+    <div class="recent-posts-card">
+  <div class="recent-posts-header">
+    <i 
+      class="iconfont icon-wenzhang_huaban" 
+      style="padding-right: 2px;">
+    </i>最近文章
+  </div>
+  <div class="recent-posts-list">
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2021-09-13</div>
+        <a href="/2021/09/13/contribute-opensource-without-code/"><div class="recent-posts-item-content">不写代码，如何为开源项目做贡献？</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2019-09-29</div>
+        <a href="/2019/09/29/modules/"><div class="recent-posts-item-content">还傻傻分不清 module.exports 和 export default  吗？</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2018-02-10</div>
+        <a href="/2018/02/10/js-debugger/"><div class="recent-posts-item-content">【译】来试试这个真正的 JavaScript 调试器吧！</div></a>
+      </div>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </div>
+     
+    <footer class="footer">
+  <div class="footer-container">
+    <div>
+      <div class="footer-dsc">
+        <span>
+          Copyright ©
+          
+            2020 -
+          
+          2022
+        </span>
+        &nbsp;
+        <a 
+          href="/" 
+          class="footer-link">
+          theme-kaze demo
+        </a>
+      </div>
+    </div>
+
+    
+      <div class="footer-dsc">
+        
+          Powered by
+          <a 
+            href="https://hexo.io/" 
+            class="footer-link" 
+            target="_blank" 
+            rel="nofollow noopener noreferrer">
+            &nbsp;Hexo
+          </a>
+        
+        
+          <span>&nbsp;|&nbsp;</span>
+        
+        
+          Theme -
+          <a 
+            href="https://github.com/theme-kaze" 
+            class="footer-link" 
+            target="_blank"
+            rel="nofollow noopener noreferrer">
+            &nbsp;Kaze
+          </a>
+        
+      </div>
+    
+    
+    
+    
+</footer> 
+    
+  <a 
+    role="button" 
+    id="scrollbutton" 
+    class="basebutton" 
+    aria-label="回到顶部">
+    <i class="iconfont icon-arrowleft button-icon"></i>
+  </a>
+
+<a 
+  role="button" 
+  id="menubutton"
+  aria-label="menu button"
+  class="basebutton">
+  <i class="iconfont icon-menu button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="popbutton" 
+  class="basebutton" 
+  aria-label="控制中心">
+  <i class="iconfont icon-expand button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="darkbutton" 
+  class="basebutton darkwidget" 
+  aria-label="夜色模式">
+  <i class="iconfont icon-weather button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="searchbutton" 
+  class="basebutton searchwidget" 
+  aria-label="搜索">
+  <i class="iconfont icon-search button-icon"></i>
+</a> 
+     
+     
+     
+      <script>
+  var addImgLayout = function () {
+    var img = document.querySelectorAll('.post-content img')
+    var i
+    for (i = 0; i < img.length; i++) {
+      var wrapper = document.createElement('a')
+      wrapper.setAttribute('href', img[i].getAttribute('data-src'))
+      wrapper.setAttribute('aria-label', 'illustration')
+      wrapper.style.cssText =
+        'width: 100%; display: flex; justify-content: center;'
+      if (img[i].alt) wrapper.dataset.caption = img[i].alt
+      wrapper.dataset.nolink = true
+      img[i].before(wrapper)
+      wrapper.append(img[i])
+      var divWrap = document.createElement('div')
+      divWrap.classList.add('gallery')
+      wrapper.before(divWrap)
+      divWrap.append(wrapper)
+    }
+    baguetteBox.run('.gallery')
+  }
+</script>
+<script>
+  loadScript(
+    "/js/lib/lightbox/baguetteBox.min.js",
+    addImgLayout
+  )
+</script>
+ 
+     
+     
+    <script src="/js/main.js"></script> 
+     
+    
+      <script>
+        var addLazyload = function () {
+          var observer = lozad('.lozad', {
+            load: function (el) {
+              el.srcset = el.getAttribute('data-src')
+            },
+            loaded: function (el) {
+              el.classList.add('loaded')
+            },
+          })
+          observer.observe()
+        }
+      </script>
+      <script>
+        loadScript('/js/lib/lozad.min.js', addLazyload)
+      </script>
+     
+    
+    
+  </body>
+</html>

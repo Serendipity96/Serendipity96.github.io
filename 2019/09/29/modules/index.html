@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+  <meta charset="UTF-8">
+  <meta 
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <meta 
+    http-equiv="X-UA-Compatible" 
+    content="ie=edge">
+  <meta 
+    name="theme-color" 
+    content="#fff" 
+    id="theme-color">
+  <meta 
+    name="description" 
+    content="Hexo">
+  <link 
+    rel="icon" 
+    href="https://demo.theme-kaze.top/img/Kaze.png">
+  <title>还傻傻分不清 module.exports 和 export default  吗？</title>
+  
+    
+      <meta 
+        property="og:title" 
+        content="还傻傻分不清 module.exports 和 export default  吗？">
+    
+    
+      <meta 
+        property="og:url" 
+        content="http://example.com/2019/09/29/modules/index.html">
+    
+    
+      <meta 
+        property="og:img" 
+        content="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/9/28/16d7860a4beac7a1~tplv-t2oaga2asx-image.image">
+    
+    
+    
+      <meta 
+        property="og:type" 
+        content="article">
+      <meta 
+        property="og:article:published_time" 
+        content="2019-09-29">
+      <meta 
+        property="og:article:modified_time" 
+        content="2022-03-13">
+      <meta 
+        property="og:article:author" 
+        content="theme-kaze">
+      
+        
+          <meta 
+            property="og:article:tag" 
+            content="模块化">
+        
+      
+    
+  
+  <script>
+    function loadScript(url, cb) {
+      var script = document.createElement('script');
+      script.src = url;
+      if (cb) script.onload = cb;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+    function loadCSS(href, data, attr) {
+      var sheet = document.createElement('link');
+      sheet.ref = 'stylesheet';
+      sheet.href = href;
+      sheet.dataset[data] = attr;
+      document.head.appendChild(sheet);
+    }
+    function changeCSS(cssFile, data, attr) {
+      var oldlink = document.querySelector(data);
+      var newlink = document.createElement("link");
+      newlink.setAttribute("rel", "stylesheet");
+      newlink.setAttribute("href", cssFile);
+      newlink.dataset.prism = attr;
+      document.head.replaceChild(newlink, oldlink);
+    }
+  </script>
+  
+    
+  
+  <script>
+    // control reverse button
+    var reverseDarkList = {
+      dark: 'light',
+      light: 'dark'
+    };
+    var themeColor = {
+      dark: '#1c1c1e',
+      light: '#fff'
+    }
+    // get the data of css prefers-color-scheme
+    var getCssMediaQuery = function() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    // reverse current darkmode setting function
+    var reverseDarkModeSetting = function() {
+      var setting = localStorage.getItem('user-color-scheme');
+      if(reverseDarkList[setting]) {
+        setting = reverseDarkList[setting];
+      } else if(setting === null) {
+        setting = reverseDarkList[getCssMediaQuery()];
+      } else {
+        return;
+      }
+      localStorage.setItem('user-color-scheme', setting);
+      return setting;
+    };
+    // apply current darkmode setting
+  </script>
+  
+    <script>
+      var setDarkmode = function(mode) {
+      var setting = mode || localStorage.getItem('user-color-scheme');
+      if(setting === getCssMediaQuery()) {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[setting];
+        document.getElementById('theme-color').dataset.mode = setting;
+      } else if(reverseDarkList[setting]) {
+        document.documentElement.setAttribute('data-user-color-scheme', setting);
+        document.getElementById('theme-color').content = themeColor[setting];
+        document.getElementById('theme-color').dataset.mode = setting;
+      } else {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[getCssMediaQuery()];
+        document.getElementById('theme-color').dataset.mode = getCssMediaQuery();
+      }
+    };
+    setDarkmode();
+    </script>
+  
+  
+  <link rel="preload" href="//at.alicdn.com/t/font_1946621_i1kgafibvw.css" as="style" >
+  <link rel="preload" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css" as="style" >
+  
+  
+    <link rel="preload" href="/js/lib/lightbox/baguetteBox.min.js" as="script">
+    <link rel="preload" href="/js/lib/lightbox/baguetteBox.min.css" as="style" >
+  
+  
+    <link rel="preload" href="/js/lib/lozad.min.js" as="script">
+  
+  
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/main.css">
+  
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1946621_i1kgafibvw.css">
+  
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css">
+  
+    <link rel="stylesheet" href="/js/lib/lightbox/baguetteBox.min.css">
+  
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+  <body>
+    <div class="wrapper">
+       
+      <nav class="navbar">
+  <div class="navbar-logo">
+    <span class="navbar-logo-main">
+      
+        <img 
+          class="navbar-logo-img"
+          width="32"
+          height="32"
+          src="https://demo.theme-kaze.top/img/Kaze.png" 
+          alt="blog logo">
+      
+      <span class="navbar-logo-dsc">theme-kaze demo</span>
+    </span>
+  </div>
+  <div class="navbar-menu">
+    
+      <a 
+        href="/" 
+        class="navbar-menu-item">
+        
+          首页
+        
+      </a>
+    
+      <a 
+        href="/archives" 
+        class="navbar-menu-item">
+        
+          归档
+        
+      </a>
+    
+      <a 
+        href="/tags" 
+        class="navbar-menu-item">
+        
+          标签
+        
+      </a>
+    
+      <a 
+        href="/categories" 
+        class="navbar-menu-item">
+        
+          分类
+        
+      </a>
+    
+      <a 
+        href="/about" 
+        class="navbar-menu-item">
+        
+          关于
+        
+      </a>
+    
+      <a 
+        href="/links" 
+        class="navbar-menu-item">
+        
+          友链
+        
+      </a>
+    
+    <a 
+      class="navbar-menu-item darknavbar" 
+      id="dark">
+      <i class="iconfont icon-weather"></i>
+    </a>
+    <a 
+      class="navbar-menu-item searchnavbar" 
+      id="search">
+      <i 
+        class="iconfont icon-search" 
+        style="font-size: 1.2rem; font-weight: 400;">
+      </i>
+    </a>
+  </div>
+</nav> 
+      
+      <div 
+        id="local-search" 
+        style="display: none">
+        <input
+          class="navbar-menu-item"
+          id="search-input"
+          placeholder="请输入搜索内容..." />
+        <div id="search-content"></div>
+      </div>
+      
+      <div class="section-wrap">
+        <div class="container">
+          <div class="columns">
+            <main class="main-column">
+  <div class="image-wrapper">
+    <img 
+      src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/9/28/16d7860a4beac7a1~tplv-t2oaga2asx-image.image" 
+      data-src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/9/28/16d7860a4beac7a1~tplv-t2oaga2asx-image.image"
+      srcset="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/9/28/16d7860a4beac7a1~tplv-t2oaga2asx-image.image"
+      class="image lozad"
+      alt="还傻傻分不清 module.exports 和 export default  吗？ thumbnail">
+  </div>
+
+<article class="card card-content">
+  <header>
+    <h1 class="post-title">
+      还傻傻分不清 module.exports 和 export default  吗？
+    </h1>
+  </header>
+  <div class="post-meta post-show-meta">
+    <time datetime="2019-09-29T10:10:00.000Z">
+      <i 
+        class="iconfont icon-calendar" 
+        style="margin-right: 2px;">
+      </i>
+      <span>2019-09-29</span>
+    </time>
+    
+      <span class="dot"></span>
+      
+        <a 
+          href="/categories/JavaScript/" 
+          class="post-meta-link">
+          JavaScript
+        </a>
+      
+    
+    
+      <span class="dot"></span>
+      <span>2k 字</span>
+    
+  </div>
+  
+    <div 
+      class="post-meta post-show-meta" 
+      style="margin-top: -10px;">
+      <div style="display: flex; align-items: center;">
+        <i 
+          class="iconfont icon-biaoqian" 
+          style="margin-right: 2px; font-size: 1.15rem;">
+        </i>
+        
+          
+          <a 
+            href="/tags/%E6%A8%A1%E5%9D%97%E5%8C%96/" 
+            class="post-meta-link">
+            模块化
+          </a>
+        
+      </div>
+    </div>
+  
+  </header>
+  <div 
+    id="section" 
+    class="post-content">
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在使用 vue、react、node 的时候，常常会看到 module.exports，export default，require，import 等字段，因为我对这些字段的概念非常模糊，所以导致我在写代码的时候，在 node 项目里混用了 export default，在 vue 的项目里写 module.exports。</p>
+<p>那么今天就来梳理一下有关模块化的知识。</p>
+<h2 id="ESM-的模块"><a href="#ESM-的模块" class="headerlink" title="ESM 的模块"></a>ESM 的模块</h2><h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><p>ESM（ECMA Script Modules）模块主要由两个命令构成：export 和 import。</p>
+<pre class="highlight"><span class="line">暴露模块：export default &#123;&#125; , export &#123;&#125; , export function()&#123;&#125;</span><br><span class="line"></span><br><span class="line">引入模块：import &#123;xxx&#125; from &#x27;path&#x27;</span><br></pre>
+
+<h4 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h4><p>import 的大括号里面指定要从其他模块导入的变量名，如果 export 命令没有写 default，那么 import 大括号里面的变量名，必须与 export 导出的名称相同。</p>
+<pre class="highlight"><span class="line"><span class="comment">// test.js</span></span><br><span class="line"><span class="keyword">export</span> &#123;foo&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// main.js</span></span><br><span class="line"><span class="keyword">import</span> &#123; foo &#125; <span class="keyword">from</span> <span class="string">&#x27;./test.js&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 如果想为输入的变量重新取一个名字，要使用as关键字，将输入的变量重命名</span></span><br><span class="line"><span class="keyword">import</span> &#123; foo <span class="keyword">as</span> bar &#125; <span class="keyword">from</span> <span class="string">&#x27;./test.js&#x27;</span>;</span><br></pre>
+
+<h4 id="default-的作用"><a href="#default-的作用" class="headerlink" title="default 的作用"></a>default 的作用</h4><p>default 为模块指定默认输出，这样在引入时就不必关心模块输出的名字。</p>
+<pre class="highlight"><span class="line"><span class="comment">// test.js</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;foo&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// main.js</span></span><br><span class="line"><span class="keyword">import</span> bar <span class="keyword">from</span> <span class="string">&#x27;./test.js&#x27;</span></span><br></pre>
+
+<p>本质上，export default 就是输出一个叫做 default 的变量或方法，然后系统允许你为它取任意名字。</p>
+<p>有关 ESM 模块的语法，可以阅读 <a target="_blank" rel="noopener" href="http://es6.ruanyifeng.com/#docs/module">阮一峰</a> 的文章，这里不详细写出所有写法。</p>
+<h3 id="加载机制"><a href="#加载机制" class="headerlink" title="加载机制"></a>加载机制</h3><p>我们在使用 import 和 export 的时候，常常看到的是在顶层作用域使用 export 和 import，不会在块级作用域内看到 import 和 export，这是为什么呢？</p>
+<p>因为 ESM 模块的设计思想是尽量静态化，<strong>编译时</strong>就能确定模块的依赖关系，以及输入和输出的变量，如果处于块级作用域内，就没法做静态优化了，违背了 ES6 模块的设计初衷。</p>
+<p>但是我明明在 vue router 的使用中看到了这样的写法：</p>
+<pre class="highlight"><span class="line"><span class="keyword">const</span> <span class="title function_">Foo</span> = (<span class="params"></span>) =&gt; <span class="title function_">import</span>(<span class="comment">/* webpackChunkName: &quot;group-foo&quot; */</span> <span class="string">&#x27;./Foo.vue&#x27;</span>)</span><br></pre>
+<p>此时 import 的写法和常规写法不一样，是 import(), 并且确实出现在了块级作用域内。</p>
+<p>ESM 有一个<a target="_blank" rel="noopener" href="https://github.com/tc39/proposal-dynamic-import">提案</a>，建议引入 import()函数，完成动态加载。现在支持动态加载的比如：vue router、webpack。</p>
+<h4 id="vue-router-动态加载"><a href="#vue-router-动态加载" class="headerlink" title="vue router 动态加载"></a>vue router 动态加载</h4><p>vue router 的 <a target="_blank" rel="noopener" href="https://router.vuejs.org/zh/guide/advanced/lazy-loading.html">路由懒加载</a></p>
+<h4 id="webpack-动态导入"><a href="#webpack-动态导入" class="headerlink" title="webpack 动态导入"></a>webpack 动态导入</h4><p>webpack <a target="_blank" rel="noopener" href="https://webpack.docschina.org/guides/code-splitting/#%E5%8A%A8%E6%80%81%E5%AF%BC%E5%85%A5-dynamic-imports-">动态导入</a></p>
+<h2 id="Node-js-的模块"><a href="#Node-js-的模块" class="headerlink" title="Node.js 的模块"></a>Node.js 的模块</h2><h3 id="语法-1"><a href="#语法-1" class="headerlink" title="语法"></a>语法</h3><pre class="highlight"><span class="line">暴露模块：module.exports = value 或 exports.xxx = value</span><br><span class="line"></span><br><span class="line">引入模块：require(xxx),如果是第三方模块，xxx为模块名；如果是自定义模块，xxx为模块文件路径</span><br></pre>
+
+<p>Node 的模块输出和引入的方式与 ESM 不同，Node 采用的是 CommonJS 模块规范。</p>
+<p>CommonJS 规范规定，在每个模块内部，module 变量代表当前模块。这个变量是一个对象，它的 exports 属性（module.exports）是对外的接口。</p>
+<h3 id="为什么采用-CommonJS-规范呢"><a href="#为什么采用-CommonJS-规范呢" class="headerlink" title="为什么采用 CommonJS 规范呢"></a>为什么采用 CommonJS 规范呢</h3><p>Node.js 主要用于服务端项目，CommonJS 规范也主要用于服务端编程，所以 Node 的模块设计采用 CommonJS 规范很合适。</p>
+<h2 id="模块化发展的历史"><a href="#模块化发展的历史" class="headerlink" title="模块化发展的历史"></a>模块化发展的历史</h2><h3 id="为什么会有-AMD-CMD-规范"><a href="#为什么会有-AMD-CMD-规范" class="headerlink" title="为什么会有 AMD CMD 规范"></a>为什么会有 AMD CMD 规范</h3><p>服务端模块的加载是同步的，但是浏览器资源是异步加载，同步意味着阻塞，在没有 ESM 模块之前，浏览器想做模块化怎么办呢？</p>
+<p>AMD CMD 解决方案。</p>
+<p>实际上 AMD (Asynchronous Module Definition) 是 RequireJS 在推广过程中对模块定义规范化的产出。</p>
+<p>CMD (Common Module Definition) 是 SeaJS 在推广过程中对模块定义的规范化产出。</p>
+<p>SeaJS 和 requireJS 解决的都是模块化问题,只不过在模块定义方式和模块加载（可以说运行、解析）时机上有所不同。</p>
+<p>以下例子引用自 <a target="_blank" rel="noopener" href="https://juejin.im/post/6844903717947310093#heading-2">WEB 前端模块化都有什么</a></p>
+<p><strong>AMD</strong></p>
+<pre class="highlight"><span class="line"><span class="comment">// hello.js</span></span><br><span class="line"><span class="title function_">define</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;hello init&#x27;</span>);</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">getMessage</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;hello&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// world.js</span></span><br><span class="line"><span class="title function_">define</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;world init&#x27;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// main</span></span><br><span class="line"><span class="title function_">define</span>([<span class="string">&#x27;./hello.js&#x27;</span>, <span class="string">&#x27;./world.js&#x27;</span>], <span class="keyword">function</span>(<span class="params">hello</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">sayHello</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(hello.<span class="title function_">getMessage</span>());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 输出</span></span><br><span class="line"><span class="comment">// hello init</span></span><br><span class="line"><span class="comment">// world init</span></span><br></pre>
+
+<p><strong>CMD</strong></p>
+<pre class="highlight"><span class="line"><span class="comment">// hello.js</span></span><br><span class="line"><span class="title function_">define</span>(<span class="keyword">function</span>(<span class="params"><span class="built_in">require</span>, <span class="built_in">exports</span></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;hello init&#x27;</span>);</span><br><span class="line">    <span class="built_in">exports</span>.<span class="property">getMessage</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;hello&#x27;</span>;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// world.js</span></span><br><span class="line"><span class="title function_">define</span>(<span class="keyword">function</span>(<span class="params"><span class="built_in">require</span>, <span class="built_in">exports</span></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;world init&#x27;</span>);</span><br><span class="line">    <span class="built_in">exports</span>.<span class="property">getMessage</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;world&#x27;</span>;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// main</span></span><br><span class="line"><span class="title function_">define</span>(<span class="keyword">function</span>(<span class="params"><span class="built_in">require</span></span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> message;</span><br><span class="line">    <span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">        message = <span class="built_in">require</span>(<span class="string">&#x27;./hello&#x27;</span>).<span class="title function_">getMessage</span>();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        message = <span class="built_in">require</span>(<span class="string">&#x27;./world&#x27;</span>).<span class="title function_">getMessage</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 输出</span></span><br><span class="line"><span class="comment">// hello init</span></span><br></pre>
+
+<p>CMD 的输出结果中，没有打印”world init”, 并是不 world.js 文件没有加载。</p>
+<h4 id="AMD-CMD-规范加载机制"><a href="#AMD-CMD-规范加载机制" class="headerlink" title="AMD CMD 规范加载机制"></a>AMD CMD 规范加载机制</h4><p>AMD 与 CMD 都是在页面初始化时加载完成所有模块，区别是 CMD 就近依赖, 是当模块被 require 时才会触发执行, AMD 推崇依赖前置，在定义模块的时候就要声明其依赖的模块。</p>
+<p>同样都是异步加载模块，AMD 在加载模块完成后就会执行该模块，所有模块都加载执行完后会进入 require 的回调函数，执行主逻辑，这样的效果就是依赖模块的执行顺序和书写顺序不一定一致，看网络速度，哪个先下载下来，哪个先执行，但是主逻辑一定在所有依赖加载完成后才执行。</p>
+<p>CMD 加载完某个依赖模块后并不执行，只是下载而已，在所有依赖模块加载完成后进入主逻辑，遇到 require 语句的时候才执行对应的模块，这样模块的执行顺序和书写顺序是完全一致的。</p>
+<p>这也是很多人说 AMD 用户体验好，因为没有延迟，依赖模块提前执行了，CMD 性能好，因为只有用户需要的时候才执行。</p>
+<h3 id="UMD-规范解决了什么问题"><a href="#UMD-规范解决了什么问题" class="headerlink" title="UMD 规范解决了什么问题"></a>UMD 规范解决了什么问题</h3><p>AMD &amp; CMD，CommonJS 规范是两类规范，AMD &amp; CMD 用于浏览器模块化，CommonJS  用于服务端模块化，但是大家的期望有一个统一的规范来支持这两种规范。于是，UMD 规范诞生了。</p>
+<p>UMD (Universal Module Definition)，它可以通过运行时或者编译时让同一个代码模块在使用 CommonJs、CMD &#x2F; AMD 的项目中运行，同一个 JavaScript 包在浏览器 &#x2F; 服务端只需要遵守同一个写法就可以了。</p>
+<p>UMD 没有自己专有的规范，是集结了 CommonJs、CMD、AMD 的规范于一身，UMD 先判断是否支持 Node 模块格式（exports 是否存在），存在则使用 Node 模块格式，再判断是否支持 AMD（define 是否存在），存在则使用 AMD 方式加载模块，如果前两个都不存在，则将模块公开到全局（window 或 global）。</p>
+<h3 id="更早之前"><a href="#更早之前" class="headerlink" title="更早之前"></a>更早之前</h3><p>立即执行函数实现模块化（IIFE，Immediately-Invoked Function Expression）</p>
+<p>使用立即执行函数，表达式中的变量不能从外部访问。现在项目中已经看不到这样的写法了。</p>
+<p>例如：</p>
+<pre class="highlight"><span class="line">(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">var</span> count = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">return</span> count;</span><br><span class="line">&#125;)();</span><br></pre>
+
+
+
+<h2 id="模块化方案总结"><a href="#模块化方案总结" class="headerlink" title="模块化方案总结"></a>模块化方案总结</h2><table>
+<thead>
+<tr>
+<th></th>
+<th>ESM</th>
+<th>CommonJS</th>
+<th>AMD</th>
+<th>CMD</th>
+<th>UMD</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>加载机制</td>
+<td>编译时</td>
+<td>运行时</td>
+<td>提前预加载</td>
+<td>编译时 &amp; 运行时按需加载</td>
+<td>-</td>
+</tr>
+<tr>
+<td>同步&#x2F;异步</td>
+<td>异步</td>
+<td>同步</td>
+<td>异步</td>
+<td>异步，有延迟执行的情况</td>
+<td>-</td>
+</tr>
+<tr>
+<td>适用场合</td>
+<td>浏览器、服务端</td>
+<td>服务端</td>
+<td>浏览器</td>
+<td>浏览器</td>
+<td>浏览器、服务端</td>
+</tr>
+<tr>
+<td>是否常见</td>
+<td>☆☆☆</td>
+<td>☆☆☆</td>
+<td>☆</td>
+<td>☆</td>
+<td>☆</td>
+</tr>
+</tbody></table>
+<p>ESM 在语言标准的层面上，成为浏览器和服务端通用的模块解决方案。</p>
+<h2 id="工具时代"><a href="#工具时代" class="headerlink" title="工具时代"></a>工具时代</h2><p>webpack 在定义模块上，支持上面提到的所有模块声明方式，只需要在 webpack 的 output 中添加 <a target="_blank" rel="noopener" href="https://webpack.js.org/configuration/output/#outputlibrarytarget">libraryTarget</a>: ‘commonjs&#x2F;amd&#x2F;umd’即可。</p>
+<h2 id="模块化的好处"><a href="#模块化的好处" class="headerlink" title="模块化的好处"></a>模块化的好处</h2><ol>
+<li>避免命名冲突，每个模块内的变量仅对自己可见，外部获取依赖模块输出</li>
+<li>按需加载</li>
+<li>解耦、复用、高可维护性</li>
+</ol>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a target="_blank" rel="noopener" href="http://es6.ruanyifeng.com/#docs/module">ECMAScript 6 入门</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.im/post/6844903744518389768">前端模块化详解(完整版)</a></p>
+<p><a target="_blank" rel="noopener" href="http://www.bubuko.com/infodetail-1125914.html">AMD 与 CMD 区别</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/seajs/seajs/issues/277">SeaJS 和 RequireJS 的差异</a></p>
+
+  </div>
+  <div>
+    
+      <div 
+        class="post-note note-warning copyright" 
+        style="margin-top: 42px">
+        <p>
+          <span style="font-weight: bold;">作者：</span><a 
+            target="_blank" 
+            rel="nofollow noopener noreferrer" 
+            href="/about">
+            theme-kaze
+          </a>
+        </p>
+        <p>
+          <span style="font-weight: bold;">文章链接：</span><a 
+            target="_blank" 
+            rel="nofollow noopener noreferrer" 
+            href="http://example.com/2019/09/29/modules/">
+            http://example.com/2019/09/29/modules/
+          </a>
+        </p>
+        <p><span style="font-weight: bold;">版权声明：</span>本博客所有文章除特别声明外，均采用<a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">CC BY-NC-SA 4.0 协议</a>。转载请注明出处！</p>
+      </div>
+    
+  </div>
+</article>
+<div class="nav">
+  
+    <div class="nav-item-prev">
+      <a 
+        href="/2021/09/13/contribute-opensource-without-code/" 
+        class="nav-link">
+        <i class="iconfont icon-left nav-prev-icon"></i>
+        <div>
+          <div class="nav-label">上一篇</div>
+          
+            <div class="nav-title">不写代码，如何为开源项目做贡献？ </div>
+          
+        </div>
+      </a>
+    </div>
+  
+  
+    <div class="nav-item-next">
+      <a 
+        href="/2018/02/10/js-debugger/" 
+        class="nav-link">
+        <div>
+          <div class="nav-label">下一篇</div>
+          
+            <div class="nav-title">【译】来试试这个真正的 JavaScript 调试器吧！ </div>
+          
+        </div>
+        <i class="iconfont icon-right nav-next-icon"></i>
+      </a>
+    </div>
+  
+</div>
+
+<div 
+  class="card card-content toc-card" 
+  id="mobiletoc">
+  <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>目录
+</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ESM-%E7%9A%84%E6%A8%A1%E5%9D%97"><span class="toc-text">ESM 的模块</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95"><span class="toc-text">语法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F"><span class="toc-text">注意</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#default-%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="toc-text">default 的作用</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6"><span class="toc-text">加载机制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#vue-router-%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD"><span class="toc-text">vue router 动态加载</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#webpack-%E5%8A%A8%E6%80%81%E5%AF%BC%E5%85%A5"><span class="toc-text">webpack 动态导入</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Node-js-%E7%9A%84%E6%A8%A1%E5%9D%97"><span class="toc-text">Node.js 的模块</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95-1"><span class="toc-text">语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%87%87%E7%94%A8-CommonJS-%E8%A7%84%E8%8C%83%E5%91%A2"><span class="toc-text">为什么采用 CommonJS 规范呢</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E5%8C%96%E5%8F%91%E5%B1%95%E7%9A%84%E5%8E%86%E5%8F%B2"><span class="toc-text">模块化发展的历史</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E6%9C%89-AMD-CMD-%E8%A7%84%E8%8C%83"><span class="toc-text">为什么会有 AMD CMD 规范</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#AMD-CMD-%E8%A7%84%E8%8C%83%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6"><span class="toc-text">AMD CMD 规范加载机制</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#UMD-%E8%A7%84%E8%8C%83%E8%A7%A3%E5%86%B3%E4%BA%86%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="toc-text">UMD 规范解决了什么问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%B4%E6%97%A9%E4%B9%8B%E5%89%8D"><span class="toc-text">更早之前</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E5%8C%96%E6%96%B9%E6%A1%88%E6%80%BB%E7%BB%93"><span class="toc-text">模块化方案总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7%E6%97%B6%E4%BB%A3"><span class="toc-text">工具时代</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E5%8C%96%E7%9A%84%E5%A5%BD%E5%A4%84"><span class="toc-text">模块化的好处</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-text">参考资料</span></a></li></ol>
+</div></main>
+            <aside class="left-column">
+              
+              <div class="card card-author">
+                
+  <img 
+    src="https://demo.theme-kaze.top/img/Kaze.png" 
+    class="author-img"
+    width="88"
+    height="88"
+    alt="author avatar">
+
+<p class="author-name">theme-kaze</p>
+<p class="author-description">designed by theme-kaze</p>
+<div class="author-message">
+  <a 
+    class="author-posts-count" 
+    href="/archives">
+    <span>3</span>
+    <span>文章</span>
+  </a>
+  <a 
+    class="author-categories-count" 
+    href="/categories">
+    <span>3</span>
+    <span>分类</span>
+  </a>
+  <a 
+    class="author-tags-count" 
+    href="/tags">
+    <span>3</span>
+    <span>标签</span>
+  </a>
+</div>
+
+              </div>
+               <div class="sticky-tablet">
+  
+  
+    <article class="display-when-two-columns spacer">
+      <div class="card card-content toc-card">
+        <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>目录
+</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ESM-%E7%9A%84%E6%A8%A1%E5%9D%97"><span class="toc-text">ESM 的模块</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95"><span class="toc-text">语法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F"><span class="toc-text">注意</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#default-%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="toc-text">default 的作用</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6"><span class="toc-text">加载机制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#vue-router-%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD"><span class="toc-text">vue router 动态加载</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#webpack-%E5%8A%A8%E6%80%81%E5%AF%BC%E5%85%A5"><span class="toc-text">webpack 动态导入</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Node-js-%E7%9A%84%E6%A8%A1%E5%9D%97"><span class="toc-text">Node.js 的模块</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95-1"><span class="toc-text">语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%87%87%E7%94%A8-CommonJS-%E8%A7%84%E8%8C%83%E5%91%A2"><span class="toc-text">为什么采用 CommonJS 规范呢</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E5%8C%96%E5%8F%91%E5%B1%95%E7%9A%84%E5%8E%86%E5%8F%B2"><span class="toc-text">模块化发展的历史</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E6%9C%89-AMD-CMD-%E8%A7%84%E8%8C%83"><span class="toc-text">为什么会有 AMD CMD 规范</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#AMD-CMD-%E8%A7%84%E8%8C%83%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6"><span class="toc-text">AMD CMD 规范加载机制</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#UMD-%E8%A7%84%E8%8C%83%E8%A7%A3%E5%86%B3%E4%BA%86%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="toc-text">UMD 规范解决了什么问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%B4%E6%97%A9%E4%B9%8B%E5%89%8D"><span class="toc-text">更早之前</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E5%8C%96%E6%96%B9%E6%A1%88%E6%80%BB%E7%BB%93"><span class="toc-text">模块化方案总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7%E6%97%B6%E4%BB%A3"><span class="toc-text">工具时代</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E5%8C%96%E7%9A%84%E5%A5%BD%E5%A4%84"><span class="toc-text">模块化的好处</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-text">参考资料</span></a></li></ol>
+      </div>
+    </article>
+  
+  
+  <article class="card card-content categories-widget">
+    <div class="categories-card">
+  <div class="categories-header">
+    <i 
+      class="iconfont icon-fenlei" 
+      style="padding-right: 2px;">
+    </i>分类
+  </div>
+  <div class="categories-list">
+    
+      <a href="/categories/%E5%BC%80%E6%BA%90/">
+        <div class="categories-list-item">
+          开源
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+      <a href="/categories/%E7%BF%BB%E8%AF%91/">
+        <div class="categories-list-item">
+          翻译
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+      <a href="/categories/JavaScript/">
+        <div class="categories-list-item">
+          JavaScript
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  <article class="card card-content tags-widget">
+    <div class="tags-card">
+  <div class="tags-header">
+    <i 
+      class="iconfont icon-biaoqian" 
+      style="padding-right: 2px;">
+    </i>热门标签
+  </div>
+  <div class="tags-list">
+    
+      <a 
+        href="/tags/%E6%A8%A1%E5%9D%97%E5%8C%96/" 
+        title="模块化">
+        <div class="tags-list-item">模块化</div>
+      </a>
+    
+      <a 
+        href="/tags/%E7%BF%BB%E8%AF%91/" 
+        title="翻译">
+        <div class="tags-list-item">翻译</div>
+      </a>
+    
+      <a 
+        href="/tags/%E5%BC%80%E6%BA%90/" 
+        title="开源">
+        <div class="tags-list-item">开源</div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+            </aside>
+            <aside class="right-column">
+              <div class="sticky-widescreen">
+  
+  
+    <article class="card card-content toc-card">
+      <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>目录
+</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ESM-%E7%9A%84%E6%A8%A1%E5%9D%97"><span class="toc-text">ESM 的模块</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95"><span class="toc-text">语法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F"><span class="toc-text">注意</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#default-%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="toc-text">default 的作用</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6"><span class="toc-text">加载机制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#vue-router-%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD"><span class="toc-text">vue router 动态加载</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#webpack-%E5%8A%A8%E6%80%81%E5%AF%BC%E5%85%A5"><span class="toc-text">webpack 动态导入</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Node-js-%E7%9A%84%E6%A8%A1%E5%9D%97"><span class="toc-text">Node.js 的模块</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95-1"><span class="toc-text">语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%87%87%E7%94%A8-CommonJS-%E8%A7%84%E8%8C%83%E5%91%A2"><span class="toc-text">为什么采用 CommonJS 规范呢</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E5%8C%96%E5%8F%91%E5%B1%95%E7%9A%84%E5%8E%86%E5%8F%B2"><span class="toc-text">模块化发展的历史</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E6%9C%89-AMD-CMD-%E8%A7%84%E8%8C%83"><span class="toc-text">为什么会有 AMD CMD 规范</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#AMD-CMD-%E8%A7%84%E8%8C%83%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6"><span class="toc-text">AMD CMD 规范加载机制</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#UMD-%E8%A7%84%E8%8C%83%E8%A7%A3%E5%86%B3%E4%BA%86%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="toc-text">UMD 规范解决了什么问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%B4%E6%97%A9%E4%B9%8B%E5%89%8D"><span class="toc-text">更早之前</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E5%8C%96%E6%96%B9%E6%A1%88%E6%80%BB%E7%BB%93"><span class="toc-text">模块化方案总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7%E6%97%B6%E4%BB%A3"><span class="toc-text">工具时代</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E5%8C%96%E7%9A%84%E5%A5%BD%E5%A4%84"><span class="toc-text">模块化的好处</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-text">参考资料</span></a></li></ol>
+    </article>
+  
+  
+  <article class="card card-content">
+    <div class="recent-posts-card">
+  <div class="recent-posts-header">
+    <i 
+      class="iconfont icon-wenzhang_huaban" 
+      style="padding-right: 2px;">
+    </i>最近文章
+  </div>
+  <div class="recent-posts-list">
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2021-09-13</div>
+        <a href="/2021/09/13/contribute-opensource-without-code/"><div class="recent-posts-item-content">不写代码，如何为开源项目做贡献？</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2019-09-29</div>
+        <a href="/2019/09/29/modules/"><div class="recent-posts-item-content">还傻傻分不清 module.exports 和 export default  吗？</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2018-02-10</div>
+        <a href="/2018/02/10/js-debugger/"><div class="recent-posts-item-content">【译】来试试这个真正的 JavaScript 调试器吧！</div></a>
+      </div>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </div>
+     
+    <footer class="footer">
+  <div class="footer-container">
+    <div>
+      <div class="footer-dsc">
+        <span>
+          Copyright ©
+          
+            2020 -
+          
+          2022
+        </span>
+        &nbsp;
+        <a 
+          href="/" 
+          class="footer-link">
+          theme-kaze demo
+        </a>
+      </div>
+    </div>
+
+    
+      <div class="footer-dsc">
+        
+          Powered by
+          <a 
+            href="https://hexo.io/" 
+            class="footer-link" 
+            target="_blank" 
+            rel="nofollow noopener noreferrer">
+            &nbsp;Hexo
+          </a>
+        
+        
+          <span>&nbsp;|&nbsp;</span>
+        
+        
+          Theme -
+          <a 
+            href="https://github.com/theme-kaze" 
+            class="footer-link" 
+            target="_blank"
+            rel="nofollow noopener noreferrer">
+            &nbsp;Kaze
+          </a>
+        
+      </div>
+    
+    
+    
+    
+</footer> 
+    
+  <a 
+    role="button" 
+    id="scrollbutton" 
+    class="basebutton" 
+    aria-label="回到顶部">
+    <i class="iconfont icon-arrowleft button-icon"></i>
+  </a>
+
+<a 
+  role="button" 
+  id="menubutton"
+  aria-label="menu button"
+  class="basebutton">
+  <i class="iconfont icon-menu button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="popbutton" 
+  class="basebutton" 
+  aria-label="控制中心">
+  <i class="iconfont icon-expand button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="darkbutton" 
+  class="basebutton darkwidget" 
+  aria-label="夜色模式">
+  <i class="iconfont icon-weather button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="searchbutton" 
+  class="basebutton searchwidget" 
+  aria-label="搜索">
+  <i class="iconfont icon-search button-icon"></i>
+</a> 
+     
+     
+     
+      <script>
+  var addImgLayout = function () {
+    var img = document.querySelectorAll('.post-content img')
+    var i
+    for (i = 0; i < img.length; i++) {
+      var wrapper = document.createElement('a')
+      wrapper.setAttribute('href', img[i].getAttribute('data-src'))
+      wrapper.setAttribute('aria-label', 'illustration')
+      wrapper.style.cssText =
+        'width: 100%; display: flex; justify-content: center;'
+      if (img[i].alt) wrapper.dataset.caption = img[i].alt
+      wrapper.dataset.nolink = true
+      img[i].before(wrapper)
+      wrapper.append(img[i])
+      var divWrap = document.createElement('div')
+      divWrap.classList.add('gallery')
+      wrapper.before(divWrap)
+      divWrap.append(wrapper)
+    }
+    baguetteBox.run('.gallery')
+  }
+</script>
+<script>
+  loadScript(
+    "/js/lib/lightbox/baguetteBox.min.js",
+    addImgLayout
+  )
+</script>
+ 
+     
+     
+    <script src="/js/main.js"></script> 
+     
+    
+      <script>
+        var addLazyload = function () {
+          var observer = lozad('.lozad', {
+            load: function (el) {
+              el.srcset = el.getAttribute('data-src')
+            },
+            loaded: function (el) {
+              el.classList.add('loaded')
+            },
+          })
+          observer.observe()
+        }
+      </script>
+      <script>
+        loadScript('/js/lib/lozad.min.js', addLazyload)
+      </script>
+     
+    
+    
+  </body>
+</html>

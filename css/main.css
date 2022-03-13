@@ -120,7 +120,7 @@ div {
 html,
 body {
   height: 100vh;
-  font-size: 16px;
+  font-size: 16px global font-size;
   font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;
   color: var(--text-color);
   background-color: var(--body-background-color);
@@ -424,10 +424,10 @@ pre[class*='highlight'] {
 }
 .archive-card-header {
   margin-bottom: 6px;
-  font-size: 16px;
+  font-size: 16px global font-size;
 }
 .archive-card-header .iconfont {
-  font-size: 16px;
+  font-size: 16px global font-size;
 }
 .archive-card-list-item {
   display: block;
@@ -474,6 +474,7 @@ pre[class*='highlight'] {
   align-items: center;
 }
 .author-img {
+  border-radius: 50%;
   transition: all 0.5s;
 }
 .author-name {
@@ -663,10 +664,10 @@ pre[class*='highlight'] {
 }
 .categories-header {
   margin-bottom: 6px;
-  font-size: 16px;
+  font-size: 16px global font-size;
 }
 .categories-header .iconfont {
-  font-size: 16px;
+  font-size: 16px global font-size;
 }
 .categories-list-item {
   color: var(--text-color);
@@ -957,6 +958,7 @@ pre[class*='highlight'] {
 }
 .navbar-logo-img {
   margin-right: 10px;
+  border-radius: 50%;
 }
 .navbar-menu {
   font-size: 1rem;
@@ -1200,10 +1202,10 @@ mjx-container svg:focus {
 }
 .recent-posts-header {
   margin-bottom: 16px;
-  font-size: 16px;
+  font-size: 16px global font-size;
 }
 .recent-posts-header .iconfont {
-  font-size: 16px;
+  font-size: 16px global font-size;
 }
 .recent-posts-item {
   padding-left: 6px;
@@ -1320,10 +1322,10 @@ mjx-container svg:focus {
 }
 .tags-header {
   margin-bottom: 16px;
-  font-size: 16px;
+  font-size: 16px global font-size;
 }
 .tags-header .iconfont {
-  font-size: 16px;
+  font-size: 16px global font-size;
 }
 .tags-list {
   overflow: hidden;
@@ -1361,7 +1363,7 @@ mjx-container svg:focus {
 }
 .toc-header {
   margin-bottom: 6px;
-  font-size: 16px;
+  font-size: 16px global font-size;
 }
 .toc-header .iconfont {
   font-size: 1.15rem;

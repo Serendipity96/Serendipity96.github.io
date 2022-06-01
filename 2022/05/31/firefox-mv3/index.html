@@ -18,17 +18,17 @@
   <link 
     rel="icon" 
     href="https://avatars.githubusercontent.com/u/23514812?v=4">
-  <title>V8 是如何执行 JavaScript 代码的呢？</title>
+  <title>Firefox Manifest V3：进展及下一步计划</title>
   
     
       <meta 
         property="og:title" 
-        content="V8 是如何执行 JavaScript 代码的呢？">
+        content="Firefox Manifest V3：进展及下一步计划">
     
     
       <meta 
         property="og:url" 
-        content="http://example.com/2022/04/10/google-v8/index.html">
+        content="http://example.com/2022/05/31/firefox-mv3/index.html">
     
     
       <meta 
@@ -42,7 +42,7 @@
         content="article">
       <meta 
         property="og:article:published_time" 
-        content="2022-04-10">
+        content="2022-05-31">
       <meta 
         property="og:article:modified_time" 
         content="2022-06-01">
@@ -53,7 +53,7 @@
         
           <meta 
             property="og:article:tag" 
-            content="V8">
+            content="extension">
         
       
     
@@ -251,30 +251,30 @@
 <article class="card card-content">
   <header>
     <h1 class="post-title">
-      V8 是如何执行 JavaScript 代码的呢？
+      Firefox Manifest V3：进展及下一步计划
     </h1>
   </header>
   <div class="post-meta post-show-meta">
-    <time datetime="2022-04-10T12:37:00.000Z">
+    <time datetime="2022-05-31T23:27:00.000Z">
       <i 
         class="iconfont icon-calendar" 
         style="margin-right: 2px;">
       </i>
-      <span>2022-04-10</span>
+      <span>2022-05-31</span>
     </time>
     
       <span class="dot"></span>
       
         <a 
-          href="/categories/V8/" 
+          href="/categories/extension/" 
           class="post-meta-link">
-          V8
+          extension
         </a>
       
     
     
       <span class="dot"></span>
-      <span>478 字</span>
+      <span>1.6k 字</span>
     
   </div>
   
@@ -289,9 +289,9 @@
         
           
           <a 
-            href="/tags/V8/" 
+            href="/tags/extension/" 
             class="post-meta-link">
-            V8
+            extension
           </a>
         
       </div>
@@ -301,21 +301,35 @@
   <div 
     id="section" 
     class="post-content">
-    <h2 id="V8-是如何执行-JavaScript-代码的呢"><a href="#V8-是如何执行-JavaScript-代码的呢" class="headerlink" title="V8 是如何执行 JavaScript 代码的呢"></a>V8 是如何执行 JavaScript 代码的呢</h2><p>V8 是 JavaScript 虚拟机的一种。计算机执行高级语言有两种基本方式：解释执行和编译执行。解释执行和编译执行各有优缺点，解释执行启动速度快，但是执行时速度慢；编译执行启动速度慢，但是执行速度快。V8 采用的是混合编译执行和解释执行技术（即 JIT，Just In Time）。</p>
-<h2 id="V8-是如何判断什么时候需要解释执行，什么时候需要编译执行的呢"><a href="#V8-是如何判断什么时候需要解释执行，什么时候需要编译执行的呢" class="headerlink" title="V8 是如何判断什么时候需要解释执行，什么时候需要编译执行的呢"></a>V8 是如何判断什么时候需要解释执行，什么时候需要编译执行的呢</h2><p>V8 中有一个监控器，在解释执行过程中，如果某段代码的字节码被重复多次执行，监控器会将这段代码标记为热点代码。V8 会将这段代码的字节码传给优化编译器，编译成二进制代码，此时这段代码的执行效率会大幅提升。</p>
-<p>但 JavaScript 是非常灵活的动态语言，对象结构和属性可以在运行时任意修改，经过优化编译过的代码只能针对某种固定的结构，一旦在执行过程中对象结构被动态修改，二进制代码就是无效代码了，此时优化编译器进行反优化操作，经过反优化的代码下次执行时会回退到解释器解释执行。</p>
-<h2 id="V8-执行一段-JavaScript-代码的主要流程"><a href="#V8-执行一段-JavaScript-代码的主要流程" class="headerlink" title="V8 执行一段 JavaScript 代码的主要流程"></a>V8 执行一段 JavaScript 代码的主要流程</h2><ul>
-<li>初始化基础环境</li>
-<li>解析源码生成 AST 和作用域</li>
-<li>依据 AST 和作用域生产字节码</li>
-<li>解释执行字节码</li>
-<li>监听热点代码</li>
-<li>优化热点代码为二进制机器代码</li>
-<li>反优化生产的二进制机器代码</li>
+    <h1 id="译者总结"><a href="#译者总结" class="headerlink" title="译者总结"></a>译者总结</h1><p>2022-05-18，Mozilla 官方博客发布了关于扩展（WebExtension）MV3 的进展和计划，以及和 Chrome MV3 不同的地方。值得注意的进展：</p>
+<ul>
+<li>在 W3C 下成立了一个社区小组来推进跨浏览器 WebExtensions (WECG)</li>
+<li>background script 可重新启动</li>
+<li>content scripts 不支持未经允许的跨域请求</li>
+<li>兼容 blocking WebRequest 和 declarativeNetRequest</li>
+<li>Event Pages 方案</li>
 </ul>
-<p><img src="/../images/js-flow.png" alt="js-flow" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="/../images/js-flow.png" class="lozad post-image"></p>
-<p>除了 JavaScript， 像 Python、PHP、Lua 都采用了 JIT 技术。</p>
-<p>知乎上有一个关于 Chrome V8 的分析专栏，内容不错，且持续更新：<a target="_blank" rel="noopener" href="https://www.zhihu.com/column/v8core">https://www.zhihu.com/column/v8core</a></p>
+<p>博客原文链接：<a target="_blank" rel="noopener" href="https://blog.mozilla.org/addons/2022/05/18/manifest-V3-in-firefox-recap-next-steps/">Manifest V3 in Firefox: Recap &amp; Next Steps</a></p>
+<p>如需转载译文，请注明译者：<a target="_blank" rel="noopener" href="http://github.com/Serendipity96">Serendipity96</a></p>
+<h1 id="以下是博客译文"><a href="#以下是博客译文" class="headerlink" title="以下是博客译文"></a>以下是博客译文</h1><hr>
+<p>距离上次讨论 Manifest V3 （<a target="_blank" rel="noopener" href="https://blog.mozilla.org/addons/2021/05/27/manifest-v3-update/">Manifest V3 update</a>）已经过去了一年。这期间最重要的变化是在 W3C 下成立了一个<a target="_blank" rel="noopener" href="https://github.com/w3c/webextensions">社区小组</a>来推进跨浏览器 WebExtensions (WECG)。</p>
+<p>在之前的<a target="_blank" rel="noopener" href="https://blog.mozilla.org/addons/2021/05/27/manifest-v3-update/">文章</a>中，Firefox 宣布支持 MV3，在 background pages 中使用 Service Workers。（译者注： MV3 前，background 中使用的是<a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Background_scripts">html 和 js</a> ）直接使用 Service Workers 会使一部分扩展有问题，所以一直在调整方案。其中在 WECG 中提出的 <a target="_blank" rel="noopener" href="https://github.com/w3c/webextensions/issues/134">Event Pages</a> 方案受到了社区的欢迎，并得到了 Safari 浏览器的支持。</p>
+<p>我们将启动开发者预览计划来收集 MV3 的反馈。接下来的篇幅会介绍 Firefox MV3 的改进之处，然后谈谈与 Chrome MV3 不同的地方。</p>
+<h2 id="为什么使用-MV3"><a href="#为什么使用-MV3" class="headerlink" title="为什么使用 MV3"></a>为什么使用 MV3</h2><p>2015 年我们使用 WebExtensions model 时，就决定要支持跨浏览器。我们坚信，一个扩展能运行在多个浏览器上，对用户来说是最好的服务。到 2017 年底，不仅支持跨浏览器，而且使用了 WebExtensions model。现在许多扩展只需要微小的改动就能用运行在大多数浏览器上，而且到现在为止依然使用的是 WebExtensions model。</p>
+<p>2018 年，Chrome 发布了 Manifest V3，随后微软采用 Chromium 作为新 Edge 浏览器的内核。这意味着，未来凭借 Chromium 内核浏览器在市场上的占比，对 MV3 的支持将成为浏览器扩展的标准。我们相信，在 WECG 的背景下与其他浏览器供应商合作，是平衡用户和开发者需求、建立健康生态的最佳途径。对 Mozilla 来说，这是一项长期的工作。</p>
+<h2 id="为什么-MV3-对改进-WebExtension-很重要"><a href="#为什么-MV3-对改进-WebExtension-很重要" class="headerlink" title="为什么 MV3 对改进 WebExtension 很重要"></a>为什么 MV3 对改进 WebExtension 很重要</h2><p>Manifest V3 是 WebExtensions 的一次技术迭代，这提供了改进 WebExtensions 的机会，支持向后兼容。由于 MV2 架构上的限制，有些问题难以解决，现在可以通过 MV3 来解决这些问题。</p>
+<p>扩展架构中一个核心的部分是 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Background_scripts">background page</a>，从设计上来说它会一直在运行在浏览器上。但由于内存或平台限制（例如在 Android 上），并不能保证一直运行的状态，不可避免 background page 和扩展本身会被终止运行。MV3 采用了新型架构：background script 可重新启动。为了支持这一特性，我们重新设计了现有 API，并引入了新的 API，使扩展能够声明浏览器应该如何运行，而无需 background script 。</p>
+<p>扩展的另一个核心是 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Content_scripts">content scripts</a>，用于与网页交互。我们正阻止不安全的编码行为，并提供更安全的替代方案来提高扩展的安全性。比如：字符串类的 API 已从扩展 API 中删除。此外，为了提升不同 origin 的数据隔离能力，除非目标网站同意跨域（CORS），否则 content scripts 不支持跨域请求。</p>
+<h3 id="网站访问的用户控制"><a href="#网站访问的用户控制" class="headerlink" title="网站访问的用户控制"></a>网站访问的用户控制</h3><p>扩展程序经常需要访问网站上的用户数据，虽然这能让扩展的功能更强大、满足用户的需求，但这也导致了扩展滥用用户隐私。</p>
+<p>从 MV3 开始，我们把来自扩展程序的请求作为可选项，并为用户提供透明可选的控制，让用户更容易地管理扩展程序可以访问的网站数据。</p>
+<p>同时，我们鼓励扩展使用非永久访问所有网站的模式，如小范围或暂时授权模式。我们正继续探索如何以最优的方式处理要拦截的网站，保护用户的安全（如隐私和安全扩展）。</p>
+<h2 id="Firefox-做了哪些修改"><a href="#Firefox-做了哪些修改" class="headerlink" title="Firefox 做了哪些修改"></a>Firefox 做了哪些修改</h2><h3 id="网络请求（WebRequest）"><a href="#网络请求（WebRequest）" class="headerlink" title="网络请求（WebRequest）"></a>网络请求（WebRequest）</h3><p>Chrome MV3 中最有争议的变化之一是禁止使用 blocking WebRequest，Chrome MV3 提供了更灵活的 <a target="_blank" rel="noopener" href="https://developer.chrome.com/docs/extensions/reference/declarativeNetRequest/">declarativeNetRequest</a>，这对管理高级隐私和内容屏蔽非常重要。但定义一个范围更小的 API（declarativeNetRequest）替代 blocking WebRequest，会限制一些扩展的能力。</p>
+<p>Mozilla MV3 会继续支持 blocking WebRequest。为了最大限度地兼容其他浏览器，也会支持 declarativeNetRequest。Mozilla 将继续与内容拦截器、blocking WebRequest API 主要的消费者合作，确定最合适的方案。内容拦截是扩展程序最重要的功能之一，我们致力于确保 Firefox 用户能够使用到最好的隐私工具。</p>
+<h3 id="Event-Pages"><a href="#Event-Pages" class="headerlink" title="Event Pages"></a>Event Pages</h3><p>Chrome MV3 引入了 Background Service Worker 作为持久化运行 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Anatomy_of_a_WebExtension">Background Page</a> 的方案。Mozilla 也支持在 Firefox 扩展中使用 Service Workers，这不仅是出于兼容性的考虑，还因为 Service Workers 是一个<a target="_blank" rel="noopener" href="https://github.com/w3c/webextensions/issues/51#issuecomment-892702868">有生命周期事件驱动的环境</a>，它已经是支持跨浏览器 Web 平台的一部分了。</p>
+<p>但我们发现 Service Workers 不支持某些重要的<a target="_blank" rel="noopener" href="https://github.com/w3c/webextensions/issues/72">使用场景</a>，特别是 DOM 相关的功能和 API。此外，普通的 Web 开发者并不熟悉 worker 的环境，我们的开发者社区指出，重写扩展对于<a target="_blank" rel="noopener" href="https://addons.mozilla.org/en-US/firefox/extensions/">现有扩展</a>的开发者来说可能有些困难。</p>
+<p>Firefox 决定在 MV3 中支持 Event Pages，我们的开发者预览版不包括 Service Workers（我们还在开发，未来的版本将支持 Service Workers）。这将帮助开发者更容易地迁移现有扩展的 background pages 支持 MV3，同时保留 MV2 中所有 DOM 相关的功能。在即将发布的版本中， MV2 会支持 Event Pages，这有利于 MV2 扩展迁移。</p>
+<h2 id="Firefox-下一步计划"><a href="#Firefox-下一步计划" class="headerlink" title="Firefox 下一步计划"></a>Firefox 下一步计划</h2><p>在启动 Manifest V3 开发者预览计划时，希望广大开发者能来测试 MV3 的实现，帮我们找出 bug 或不兼容之处，预计在 2022 年底前推出 MV3 支持版。随着这项工作接近完成，我们将公布更多关于时间节点和迁移的细节。</p>
+<p>有关 Manifest V3 开发者预览版的更多信息，请查看<a target="_blank" rel="noopener" href="https://extensionworkshop.com/documentation/develop/manifest-v3-migration-guide/">迁移指南</a>。如果您对 Manifest V3 有任何疑问或反馈，我们很乐意在 <a target="_blank" rel="noopener" href="https://discourse.mozilla.org/c/add-ons/35">Firefox Add-ons Discourse</a> 听到您的意见。</p>
 
   </div>
   <div>
@@ -335,8 +349,8 @@
           <span style="font-weight: bold;">文章链接：</span><a 
             target="_blank" 
             rel="nofollow noopener noreferrer" 
-            href="http://example.com/2022/04/10/google-v8/">
-            http://example.com/2022/04/10/google-v8/
+            href="http://example.com/2022/05/31/firefox-mv3/">
+            http://example.com/2022/05/31/firefox-mv3/
           </a>
         </p>
         <p><span style="font-weight: bold;">版权声明：</span>本博客所有文章除特别声明外，均采用<a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">CC BY-NC-SA 4.0 协议</a>。转载请注明出处！</p>
@@ -346,29 +360,15 @@
 </article>
 <div class="nav">
   
-    <div class="nav-item-prev">
-      <a 
-        href="/2022/05/31/firefox-mv3/" 
-        class="nav-link">
-        <i class="iconfont icon-left nav-prev-icon"></i>
-        <div>
-          <div class="nav-label">上一篇</div>
-          
-            <div class="nav-title">Firefox Manifest V3：进展及下一步计划 </div>
-          
-        </div>
-      </a>
-    </div>
-  
   
     <div class="nav-item-next">
       <a 
-        href="/2021/09/13/contribute-opensource-without-code/" 
+        href="/2022/04/10/google-v8/" 
         class="nav-link">
         <div>
           <div class="nav-label">下一篇</div>
           
-            <div class="nav-title">不写代码，如何为开源项目做贡献？ </div>
+            <div class="nav-title">V8 是如何执行 JavaScript 代码的呢？ </div>
           
         </div>
         <i class="iconfont icon-right nav-next-icon"></i>
@@ -386,7 +386,7 @@
     style="padding-right: 2px;">
   </i>目录
 </div>
-<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#V8-%E6%98%AF%E5%A6%82%E4%BD%95%E6%89%A7%E8%A1%8C-JavaScript-%E4%BB%A3%E7%A0%81%E7%9A%84%E5%91%A2"><span class="toc-text">V8 是如何执行 JavaScript 代码的呢</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#V8-%E6%98%AF%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E9%9C%80%E8%A6%81%E8%A7%A3%E9%87%8A%E6%89%A7%E8%A1%8C%EF%BC%8C%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E9%9C%80%E8%A6%81%E7%BC%96%E8%AF%91%E6%89%A7%E8%A1%8C%E7%9A%84%E5%91%A2"><span class="toc-text">V8 是如何判断什么时候需要解释执行，什么时候需要编译执行的呢</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#V8-%E6%89%A7%E8%A1%8C%E4%B8%80%E6%AE%B5-JavaScript-%E4%BB%A3%E7%A0%81%E7%9A%84%E4%B8%BB%E8%A6%81%E6%B5%81%E7%A8%8B"><span class="toc-text">V8 执行一段 JavaScript 代码的主要流程</span></a></li></ol>
+<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%91%E8%80%85%E6%80%BB%E7%BB%93"><span class="toc-text">译者总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%A5%E4%B8%8B%E6%98%AF%E5%8D%9A%E5%AE%A2%E8%AF%91%E6%96%87"><span class="toc-text">以下是博客译文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8-MV3"><span class="toc-text">为什么使用 MV3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88-MV3-%E5%AF%B9%E6%94%B9%E8%BF%9B-WebExtension-%E5%BE%88%E9%87%8D%E8%A6%81"><span class="toc-text">为什么 MV3 对改进 WebExtension 很重要</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%AB%99%E8%AE%BF%E9%97%AE%E7%9A%84%E7%94%A8%E6%88%B7%E6%8E%A7%E5%88%B6"><span class="toc-text">网站访问的用户控制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Firefox-%E5%81%9A%E4%BA%86%E5%93%AA%E4%BA%9B%E4%BF%AE%E6%94%B9"><span class="toc-text">Firefox 做了哪些修改</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%EF%BC%88WebRequest%EF%BC%89"><span class="toc-text">网络请求（WebRequest）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Event-Pages"><span class="toc-text">Event Pages</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Firefox-%E4%B8%8B%E4%B8%80%E6%AD%A5%E8%AE%A1%E5%88%92"><span class="toc-text">Firefox 下一步计划</span></a></li></ol></li></ol>
 </div></main>
             <aside class="left-column">
               
@@ -434,7 +434,7 @@
     style="padding-right: 2px;">
   </i>目录
 </div>
-<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#V8-%E6%98%AF%E5%A6%82%E4%BD%95%E6%89%A7%E8%A1%8C-JavaScript-%E4%BB%A3%E7%A0%81%E7%9A%84%E5%91%A2"><span class="toc-text">V8 是如何执行 JavaScript 代码的呢</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#V8-%E6%98%AF%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E9%9C%80%E8%A6%81%E8%A7%A3%E9%87%8A%E6%89%A7%E8%A1%8C%EF%BC%8C%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E9%9C%80%E8%A6%81%E7%BC%96%E8%AF%91%E6%89%A7%E8%A1%8C%E7%9A%84%E5%91%A2"><span class="toc-text">V8 是如何判断什么时候需要解释执行，什么时候需要编译执行的呢</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#V8-%E6%89%A7%E8%A1%8C%E4%B8%80%E6%AE%B5-JavaScript-%E4%BB%A3%E7%A0%81%E7%9A%84%E4%B8%BB%E8%A6%81%E6%B5%81%E7%A8%8B"><span class="toc-text">V8 执行一段 JavaScript 代码的主要流程</span></a></li></ol>
+<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%91%E8%80%85%E6%80%BB%E7%BB%93"><span class="toc-text">译者总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%A5%E4%B8%8B%E6%98%AF%E5%8D%9A%E5%AE%A2%E8%AF%91%E6%96%87"><span class="toc-text">以下是博客译文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8-MV3"><span class="toc-text">为什么使用 MV3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88-MV3-%E5%AF%B9%E6%94%B9%E8%BF%9B-WebExtension-%E5%BE%88%E9%87%8D%E8%A6%81"><span class="toc-text">为什么 MV3 对改进 WebExtension 很重要</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%AB%99%E8%AE%BF%E9%97%AE%E7%9A%84%E7%94%A8%E6%88%B7%E6%8E%A7%E5%88%B6"><span class="toc-text">网站访问的用户控制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Firefox-%E5%81%9A%E4%BA%86%E5%93%AA%E4%BA%9B%E4%BF%AE%E6%94%B9"><span class="toc-text">Firefox 做了哪些修改</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%EF%BC%88WebRequest%EF%BC%89"><span class="toc-text">网络请求（WebRequest）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Event-Pages"><span class="toc-text">Event Pages</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Firefox-%E4%B8%8B%E4%B8%80%E6%AD%A5%E8%AE%A1%E5%88%92"><span class="toc-text">Firefox 下一步计划</span></a></li></ol></li></ol>
       </div>
     </article>
   
@@ -546,7 +546,7 @@
     style="padding-right: 2px;">
   </i>目录
 </div>
-<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#V8-%E6%98%AF%E5%A6%82%E4%BD%95%E6%89%A7%E8%A1%8C-JavaScript-%E4%BB%A3%E7%A0%81%E7%9A%84%E5%91%A2"><span class="toc-text">V8 是如何执行 JavaScript 代码的呢</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#V8-%E6%98%AF%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E9%9C%80%E8%A6%81%E8%A7%A3%E9%87%8A%E6%89%A7%E8%A1%8C%EF%BC%8C%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E9%9C%80%E8%A6%81%E7%BC%96%E8%AF%91%E6%89%A7%E8%A1%8C%E7%9A%84%E5%91%A2"><span class="toc-text">V8 是如何判断什么时候需要解释执行，什么时候需要编译执行的呢</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#V8-%E6%89%A7%E8%A1%8C%E4%B8%80%E6%AE%B5-JavaScript-%E4%BB%A3%E7%A0%81%E7%9A%84%E4%B8%BB%E8%A6%81%E6%B5%81%E7%A8%8B"><span class="toc-text">V8 执行一段 JavaScript 代码的主要流程</span></a></li></ol>
+<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%91%E8%80%85%E6%80%BB%E7%BB%93"><span class="toc-text">译者总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%A5%E4%B8%8B%E6%98%AF%E5%8D%9A%E5%AE%A2%E8%AF%91%E6%96%87"><span class="toc-text">以下是博客译文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8-MV3"><span class="toc-text">为什么使用 MV3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88-MV3-%E5%AF%B9%E6%94%B9%E8%BF%9B-WebExtension-%E5%BE%88%E9%87%8D%E8%A6%81"><span class="toc-text">为什么 MV3 对改进 WebExtension 很重要</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%AB%99%E8%AE%BF%E9%97%AE%E7%9A%84%E7%94%A8%E6%88%B7%E6%8E%A7%E5%88%B6"><span class="toc-text">网站访问的用户控制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Firefox-%E5%81%9A%E4%BA%86%E5%93%AA%E4%BA%9B%E4%BF%AE%E6%94%B9"><span class="toc-text">Firefox 做了哪些修改</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%EF%BC%88WebRequest%EF%BC%89"><span class="toc-text">网络请求（WebRequest）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Event-Pages"><span class="toc-text">Event Pages</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Firefox-%E4%B8%8B%E4%B8%80%E6%AD%A5%E8%AE%A1%E5%88%92"><span class="toc-text">Firefox 下一步计划</span></a></li></ol></li></ol>
     </article>
   
   
